@@ -3,159 +3,56 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Brooklyn's Daily Goals</title>
+  <title>Goals App</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: verdana, sans-serif;
-      background-color: lightblue;
-      min-height: 100vh;
-      padding-bottom: 40px;
-    }
-
-    h1 {
-      border: 2px solid Tomato;
-      border-radius: 10px;
-      background-color: bisque;
-      color: rgb(0, 0, 0);
-      text-align: center;
-      padding: 16px 24px;
-      font-size: 28px;
-      margin: 0;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #555;
-      font-size: 13px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      padding: 10px 0 0;
-      font-family: verdana;
-    }
-
-    .container {
-      max-width: 480px;
-      margin: 0 auto;
-      padding: 0 16px;
-    }
-
-    /* Progress */
-    .progress-wrap {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      background: bisque;
-      border: 2px solid Tomato;
-      border-radius: 10px;
-      padding: 16px;
-      margin: 16px 0;
-    }
-
+    body { font-family: verdana, sans-serif; background-color: lightblue; min-height: 100vh; padding-bottom: 40px; }
+    h1 { border: 2px solid Tomato; border-radius: 10px; background-color: bisque; color: rgb(0,0,0); text-align: center; padding: 16px 24px; font-size: 28px; margin: 0; }
+    .subtitle { text-align: center; color: #555; font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase; padding: 10px 0 0; font-family: verdana; }
+    .container { max-width: 480px; margin: 0 auto; padding: 0 16px; }
+    .progress-wrap { display: flex; align-items: center; gap: 16px; background: bisque; border: 2px solid Tomato; border-radius: 10px; padding: 16px; margin: 16px 0; }
     .ring { position: relative; width: 64px; height: 64px; flex-shrink: 0; }
     .ring svg { transform: rotate(-90deg); }
-    .ring-label {
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; font-weight: bold; color: #333;
-    }
-
+    .ring-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: #333; }
     .progress-text p { margin: 0; font-family: verdana; }
     .progress-text .big { font-size: 20px; font-weight: bold; color: #1a1a1a; }
     .progress-text .small { font-size: 13px; color: #777; margin-top: 2px; }
-
-    /* Tabs */
-    .tabs {
-      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;
-    }
-    .tab {
-      padding: 6px 14px; border-radius: 20px; border: 2px solid Tomato;
-      cursor: pointer; font-size: 13px; font-weight: bold; font-family: verdana;
-      background: bisque; color: #333; transition: all 0.2s;
-    }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .tab { padding: 6px 14px; border-radius: 20px; border: 2px solid Tomato; cursor: pointer; font-size: 13px; font-weight: bold; font-family: verdana; background: bisque; color: #333; transition: all 0.2s; }
     .tab.active { background: Tomato; color: white; }
-
-    /* Goal cards */
-    .goal-card {
-      display: flex; align-items: center; gap: 14px;
-      background: white; border-radius: 10px;
-      border: 2px solid #e0c8b0;
-      padding: 14px 16px; margin-bottom: 10px;
-      cursor: pointer; transition: opacity 0.2s;
-    }
+    .goal-card { display: flex; align-items: center; gap: 14px; background: white; border-radius: 10px; border: 2px solid #e0c8b0; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: opacity 0.2s; }
     .goal-card.done { opacity: 0.55; }
-
-    .checkbox {
-      width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s; border: 2px solid Tomato; background: transparent;
-    }
+    .checkbox { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; border: 2px solid Tomato; background: transparent; }
     .checkbox.checked { background: Tomato; border-color: Tomato; }
     .checkbox.checked::after { content: "✓"; color: white; font-size: 14px; font-weight: bold; }
-
     .goal-info { flex: 1; }
-    .goal-text {
-      font-family: verdana; font-size: 15px; font-weight: bold;
-      color: #1a1a1a; margin: 0 0 3px;
-    }
+    .goal-text { font-family: verdana; font-size: 15px; font-weight: bold; color: #1a1a1a; margin: 0 0 3px; }
     .goal-text.done-text { text-decoration: line-through; }
     .goal-cat { font-size: 12px; font-weight: bold; font-family: verdana; }
-
-    .del-btn {
-      background: none; border: none; cursor: pointer;
-      font-size: 20px; color: #bbb; padding: 4px; line-height: 1;
-    }
+    .del-btn { background: none; border: none; cursor: pointer; font-size: 20px; color: #bbb; padding: 4px; line-height: 1; }
     .del-btn:hover { color: Tomato; }
-
-    /* Add form */
-    .add-btn {
-      width: 100%; padding: 15px;
-      border-radius: 10px; border: 2px dashed Tomato;
-      background: transparent; cursor: pointer;
-      font-size: 15px; color: Tomato; font-weight: bold;
-      font-family: verdana; transition: background 0.2s;
-    }
+    .add-btn { width: 100%; padding: 15px; border-radius: 10px; border: 2px dashed Tomato; background: transparent; cursor: pointer; font-size: 15px; color: Tomato; font-weight: bold; font-family: verdana; transition: background 0.2s; }
     .add-btn:hover { background: bisque; }
-
-    .add-form {
-      background: white; border-radius: 10px;
-      border: 2px solid Tomato; padding: 16px;
-    }
-    .add-form input, .add-form select {
-      width: 100%; border: 2px solid #e0c8b0; border-radius: 8px;
-      padding: 10px; font-size: 15px; font-family: verdana;
-      margin-bottom: 10px; outline: none; background: #fffaf5;
-    }
+    .add-form { background: white; border-radius: 10px; border: 2px solid Tomato; padding: 16px; }
+    .add-form input, .add-form select { width: 100%; border: 2px solid #e0c8b0; border-radius: 8px; padding: 10px; font-size: 15px; font-family: verdana; margin-bottom: 10px; outline: none; background: #fffaf5; }
     .add-form input:focus, .add-form select:focus { border-color: Tomato; }
-
     .form-btns { display: flex; gap: 8px; }
-    .btn-cancel, .btn-save {
-      flex: 1; padding: 10px; border-radius: 8px;
-      border: none; cursor: pointer; font-size: 14px;
-      font-weight: bold; font-family: verdana;
-    }
+    .btn-cancel, .btn-save { flex: 1; padding: 10px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; font-weight: bold; font-family: verdana; }
     .btn-cancel { background: lightblue; color: #333; }
     .btn-save { background: Tomato; color: white; }
-
     .empty { text-align: center; padding: 40px 0; color: #888; font-family: verdana; font-size: 15px; }
   </style>
 </head>
 <body>
-
 <div class="container">
   <p class="subtitle" id="date-label"></p>
-  <h1>Brooklyn's Daily Goals</h1>
-
-  <!-- Progress -->
+  <h1>Goals App</h1>
   <div class="progress-wrap">
     <div class="ring">
       <svg width="64" height="64">
         <circle cx="32" cy="32" r="26" fill="none" stroke="#e0c8b0" stroke-width="6"/>
         <circle id="ring-fill" cx="32" cy="32" r="26" fill="none" stroke="Tomato" stroke-width="6"
-          stroke-linecap="round"
-          stroke-dasharray="163.36"
-          stroke-dashoffset="163.36"
+          stroke-linecap="round" stroke-dasharray="163.36" stroke-dashoffset="163.36"
           style="transition: stroke-dashoffset 0.5s ease"/>
       </svg>
       <div class="ring-label" id="ring-pct">0%</div>
@@ -165,19 +62,12 @@
       <p class="small" id="progress-small">0 remaining today</p>
     </div>
   </div>
-
-  <!-- Tabs -->
   <div class="tabs" id="tabs"></div>
-
-  <!-- Goals list -->
   <div id="goals-list"></div>
-
-  <!-- Add button / form -->
   <div id="add-area">
     <button class="add-btn" onclick="showForm()">+ Add New Goal</button>
   </div>
 </div>
-
 <script>
   const CATEGORIES = {
     "Health & Fitness":        { icon: "🏃", color: "#FF6B6B" },
@@ -185,7 +75,6 @@
     "Work & Productivity":     { icon: "💼", color: "#4A90D9" },
     "Personal Growth":         { icon: "🌱", color: "#2ECC71" },
   };
-
   let goals = [
     { id: 1, text: "30 min workout",           category: "Health & Fitness",        done: false },
     { id: 2, text: "Drink 8 glasses of water",  category: "Health & Fitness",        done: false },
@@ -194,15 +83,10 @@
     { id: 5, text: "Complete top 3 work tasks", category: "Work & Productivity",     done: false },
     { id: 6, text: "Read for 20 minutes",       category: "Personal Growth",         done: false },
   ];
-
   let activeTab = "All";
-
-  // Date
   document.getElementById("date-label").textContent =
     new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
-
   function render() {
-    // Progress
     const done = goals.filter(g => g.done).length;
     const total = goals.length;
     const pct = total ? Math.round((done / total) * 100) : 0;
@@ -211,77 +95,53 @@
     document.getElementById("ring-pct").textContent = pct + "%";
     document.getElementById("progress-big").textContent = done + "/" + total + " done";
     document.getElementById("progress-small").textContent = (total - done) + " remaining today";
-
-    // Tabs
     const tabs = ["All", ...Object.keys(CATEGORIES)];
     document.getElementById("tabs").innerHTML = tabs.map(t =>
-      `<button class="tab ${activeTab === t ? "active" : ""}" onclick="setTab('${t}')">
-        ${t === "All" ? "All" : CATEGORIES[t].icon + " " + t.split(" ")[0]}
-      </button>`
+      '<button class="tab ' + (activeTab === t ? "active" : "") + '" onclick="setTab(\'' + t + '\')">' +
+      (t === "All" ? "All" : CATEGORIES[t].icon + " " + t.split(" ")[0]) + '</button>'
     ).join("");
-
-    // Goals
     const filtered = activeTab === "All" ? goals : goals.filter(g => g.category === activeTab);
     const list = document.getElementById("goals-list");
     if (filtered.length === 0) {
-      list.innerHTML = `<div class="empty">No goals yet — add one below! ✨</div>`;
+      list.innerHTML = '<div class="empty">No goals yet — add one below! ✨</div>';
     } else {
       list.innerHTML = filtered.map(g => {
         const cat = CATEGORIES[g.category];
-        return `
-          <div class="goal-card ${g.done ? "done" : ""}" onclick="toggle(${g.id})">
-            <div class="checkbox ${g.done ? "checked" : ""}"></div>
-            <div class="goal-info">
-              <p class="goal-text ${g.done ? "done-text" : ""}">${g.text}</p>
-              <span class="goal-cat" style="color:${cat.color}">${cat.icon} ${g.category}</span>
-            </div>
-            <button class="del-btn" onclick="event.stopPropagation(); remove(${g.id})">×</button>
-          </div>`;
+        return '<div class="goal-card ' + (g.done ? "done" : "") + '" onclick="toggle(' + g.id + ')">' +
+          '<div class="checkbox ' + (g.done ? "checked" : "") + '"></div>' +
+          '<div class="goal-info">' +
+          '<p class="goal-text ' + (g.done ? "done-text" : "") + '">' + g.text + '</p>' +
+          '<span class="goal-cat" style="color:' + cat.color + '">' + cat.icon + ' ' + g.category + '</span>' +
+          '</div>' +
+          '<button class="del-btn" onclick="event.stopPropagation(); remove(' + g.id + ')">×</button>' +
+          '</div>';
       }).join("");
     }
   }
-
-  function toggle(id) {
-    goals = goals.map(g => g.id === id ? { ...g, done: !g.done } : g);
-    render();
-  }
-
-  function remove(id) {
-    goals = goals.filter(g => g.id !== id);
-    render();
-  }
-
+  function toggle(id) { goals = goals.map(g => g.id === id ? { ...g, done: !g.done } : g); render(); }
+  function remove(id) { goals = goals.filter(g => g.id !== id); render(); }
   function setTab(t) { activeTab = t; render(); }
-
   function showForm() {
-    document.getElementById("add-area").innerHTML = `
-      <div class="add-form">
-        <input id="new-text" placeholder="What's your goal?" onkeydown="if(event.key==='Enter') saveGoal()" autofocus />
-        <select id="new-cat">
-          ${Object.keys(CATEGORIES).map(c => `<option>${c}</option>`).join("")}
-        </select>
-        <div class="form-btns">
-          <button class="btn-cancel" onclick="cancelForm()">Cancel</button>
-          <button class="btn-save" onclick="saveGoal()">Add Goal</button>
-        </div>
-      </div>`;
+    document.getElementById("add-area").innerHTML =
+      '<div class="add-form">' +
+      '<input id="new-text" placeholder="What's your goal?" onkeydown="if(event.key==='Enter') saveGoal()" autofocus />' +
+      '<select id="new-cat">' + Object.keys(CATEGORIES).map(c => '<option>' + c + '</option>').join("") + '</select>' +
+      '<div class="form-btns">' +
+      '<button class="btn-cancel" onclick="cancelForm()">Cancel</button>' +
+      '<button class="btn-save" onclick="saveGoal()">Add Goal</button>' +
+      '</div></div>';
     document.getElementById("new-text").focus();
   }
-
   function saveGoal() {
     const text = document.getElementById("new-text").value.trim();
     const cat = document.getElementById("new-cat").value;
     if (!text) return;
     goals.push({ id: Date.now(), text, category: cat, done: false });
-    cancelForm();
-    render();
+    cancelForm(); render();
   }
-
   function cancelForm() {
-    document.getElementById("add-area").innerHTML =
-      `<button class="add-btn" onclick="showForm()">+ Add New Goal</button>`;
+    document.getElementById("add-area").innerHTML = '<button class="add-btn" onclick="showForm()">+ Add New Goal</button>';
   }
-
   render();
 </script>
 </body>
