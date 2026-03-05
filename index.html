@@ -15,14 +15,13 @@
     .header h1{font-size:28px;font-weight:700;letter-spacing:-0.5px;}
     .nav-bar{background:white;border-bottom:1px solid #e0eeeb;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(45,122,107,0.08);}
     .nav-tabs{display:flex;max-width:480px;margin:0 auto;}
-    .nav-tab{flex:1;padding:12px 0 10px;text-align:center;font-size:12px;font-weight:600;color:#7ab5ac;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;font-family:'Inter',sans-serif;background:none;border-top:none;border-left:none;border-right:none;pointer-events:all;user-select:none;-webkit-tap-highlight-color:transparent;}
+    .nav-tab{flex:1;padding:12px 0 10px;text-align:center;font-size:12px;font-weight:600;color:#7ab5ac;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;font-family:'Inter',sans-serif;background:none;border-top:none;border-left:none;border-right:none;}
     .nav-tab.active{color:#2d7a6b;border-bottom-color:#2d7a6b;}
-    .nav-tab .tab-icon{display:block;font-size:20px;margin-bottom:3px;pointer-events:none;}
-    .nav-tab .tab-label{display:block;pointer-events:none;}
+    .tab-icon{display:block;font-size:20px;margin-bottom:3px;}
+    .tab-label{display:block;}
     .container{max-width:480px;margin:0 auto;padding:0 18px;}
     .page{display:none;padding-top:20px;}
     .page.active{display:block;}
-    /* GOALS */
     .cat-tabs{display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:12px;scrollbar-width:none;}
     .cat-tabs::-webkit-scrollbar{display:none;}
     .cat-tab{flex-shrink:0;padding:7px 16px;border-radius:24px;border:1.5px solid #b2d8d0;cursor:pointer;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;background:white;color:#4a7c75;transition:all 0.2s;white-space:nowrap;}
@@ -33,7 +32,7 @@
     .goal-card.done{opacity:0.5;}
     .checkbox{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.25s;border:2px solid #b2d8d0;background:transparent;}
     .checkbox.checked{background:linear-gradient(135deg,#2d7a6b,#4db6a4);border-color:transparent;box-shadow:0 2px 8px rgba(45,122,107,0.3);}
-    .checkbox.checked::after{content:"✓";color:white;font-size:13px;font-weight:700;}
+    .checkbox.checked::after{content:"\2713";color:white;font-size:13px;font-weight:700;}
     .goal-info{flex:1;}
     .goal-text{font-size:15px;font-weight:600;color:#1e3a35;margin:0 0 4px;}
     .goal-text.done-text{text-decoration:line-through;color:#aaa;}
@@ -49,7 +48,6 @@
     .btn-cancel{flex:1;padding:11px;border-radius:10px;border:1.5px solid #ddeee9;cursor:pointer;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;background:#f7fcfb;color:#4a7c75;}
     .btn-save{flex:1;padding:11px;border-radius:10px;border:none;cursor:pointer;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;background:linear-gradient(135deg,#2d7a6b,#4db6a4);color:white;}
     .empty{text-align:center;padding:48px 0;color:#8ab5ae;font-size:15px;font-weight:500;}
-    /* METRICS */
     .metrics-range{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
     .range-btn{padding:6px 14px;border-radius:20px;border:1.5px solid #b2d8d0;background:white;color:#4a7c75;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all 0.2s;}
     .range-btn.active{background:#2d7a6b;border-color:#2d7a6b;color:white;}
@@ -70,11 +68,10 @@
     .cat-stat-pct{font-size:13px;font-weight:700;color:#2d7a6b;}
     .streak-num{font-size:42px;font-weight:700;color:#2d7a6b;text-align:center;line-height:1;}
     .streak-lbl{text-align:center;font-size:13px;color:#7ab5ac;margin-top:4px;}
-    /* JOURNAL */
     .journal-add-btn{width:100%;padding:15px;border-radius:16px;border:2px dashed #a8d5cb;background:rgba(255,255,255,0.6);cursor:pointer;font-size:14px;color:#3a9688;font-weight:600;font-family:'Inter',sans-serif;transition:all 0.2s;margin-bottom:16px;}
     .journal-add-btn:hover{background:white;border-color:#2d7a6b;}
     .journal-compose{background:white;border-radius:16px;border:1.5px solid #c8e8e1;padding:18px;margin-bottom:16px;box-shadow:0 2px 8px rgba(45,122,107,0.06);}
-    .journal-compose p{font-size:12px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#7ab5ac;margin-bottom:10px;}
+    .journal-compose-label{font-size:12px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#7ab5ac;margin-bottom:10px;}
     .journal-compose textarea{width:100%;border:1.5px solid #ddeee9;border-radius:10px;padding:12px 14px;font-size:14px;font-family:'Inter',sans-serif;outline:none;background:#f7fcfb;color:#1e3a35;resize:none;height:70px;line-height:1.5;}
     .journal-compose textarea:focus{border-color:#3a9688;background:white;}
     .journal-entry{background:white;border-radius:16px;border:1.5px solid #ddeee9;padding:16px 18px;margin-bottom:10px;box-shadow:0 2px 8px rgba(45,122,107,0.05);}
@@ -86,32 +83,28 @@
   </style>
 </head>
 <body>
-
 <div class="header">
   <div class="container">
     <p class="header-date" id="date-label"></p>
     <h1>Goals App</h1>
   </div>
 </div>
-
 <div class="nav-bar">
   <div class="nav-tabs" id="nav-tabs">
     <button class="nav-tab active" data-page="goals">
-      <span class="tab-icon">✦</span>
+      <span class="tab-icon">&#10022;</span>
       <span class="tab-label">Goals</span>
     </button>
     <button class="nav-tab" data-page="metrics">
-      <span class="tab-icon">📊</span>
+      <span class="tab-icon">&#128202;</span>
       <span class="tab-label">Metrics</span>
     </button>
     <button class="nav-tab" data-page="journal">
-      <span class="tab-icon">📓</span>
+      <span class="tab-icon">&#128218;</span>
       <span class="tab-label">Journal</span>
     </button>
   </div>
 </div>
-
-<!-- GOALS -->
 <div class="page active" id="page-goals">
   <div class="container">
     <div class="cat-tabs" id="cat-tabs"></div>
@@ -120,8 +113,6 @@
     <div id="add-area"><button class="add-btn" onclick="showForm()">+ Add New Goal</button></div>
   </div>
 </div>
-
-<!-- METRICS -->
 <div class="page" id="page-metrics">
   <div class="container">
     <div class="metrics-range">
@@ -133,8 +124,6 @@
     <div id="metrics-content"></div>
   </div>
 </div>
-
-<!-- JOURNAL -->
 <div class="page" id="page-journal">
   <div class="container">
     <div id="journal-compose-area">
@@ -143,46 +132,44 @@
     <div id="journal-list"></div>
   </div>
 </div>
-
 <script>
-// ── NAV: use event delegation so clicks always register ──
-document.getElementById('nav-tabs').addEventListener('click', function(e) {
-  var btn = e.target.closest('.nav-tab');
+document.getElementById("nav-tabs").addEventListener("click", function(e) {
+  var btn = e.target.closest(".nav-tab");
   if (!btn) return;
-  var page = btn.getAttribute('data-page');
-  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
-  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
-  document.getElementById('page-'+page).classList.add('active');
-  btn.classList.add('active');
-  if (page==='metrics') renderMetrics();
-  if (page==='journal') renderJournal();
+  var page = btn.getAttribute("data-page");
+  document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});
+  document.querySelectorAll(".nav-tab").forEach(function(t){t.classList.remove("active");});
+  document.getElementById("page-"+page).classList.add("active");
+  btn.classList.add("active");
+  if (page==="metrics") renderMetrics();
+  if (page==="journal") renderJournal();
 });
 
-const CATS = {
-  "Health & Fitness":        {icon:"🏃",color:"#e8f5f0",text:"#2d7a6b"},
-  "Habits & Daily Routines": {icon:"🌅",color:"#fff8ee",text:"#b07d2e"},
-  "Work & Productivity":     {icon:"💼",color:"#eef4fd",text:"#2e5fa3"},
-  "Personal Growth":         {icon:"🌱",color:"#f0faf0",text:"#2e7a3a"},
+var CATS = {
+  "Health & Fitness":        {icon:"&#127939;",color:"#e8f5f0",text:"#2d7a6b"},
+  "Habits & Daily Routines": {icon:"&#127749;",color:"#fff8ee",text:"#b07d2e"},
+  "Work & Productivity":     {icon:"&#128188;",color:"#eef4fd",text:"#2e5fa3"},
+  "Personal Growth":         {icon:"&#127807;",color:"#f0faf0",text:"#2e7a3a"}
 };
 
-let goals = JSON.parse(localStorage.getItem('goals_v1') || 'null') || [
+var goals = JSON.parse(localStorage.getItem("goals_v1") || "null") || [
   {id:1,text:"30 min workout",category:"Health & Fitness",done:false},
   {id:2,text:"Drink 8 glasses of water",category:"Health & Fitness",done:false},
   {id:3,text:"Make bed in the morning",category:"Habits & Daily Routines",done:false},
   {id:4,text:"No phone first 30 min",category:"Habits & Daily Routines",done:false},
   {id:5,text:"Complete top 3 work tasks",category:"Work & Productivity",done:false},
-  {id:6,text:"Read for 20 minutes",category:"Personal Growth",done:false},
+  {id:6,text:"Read for 20 minutes",category:"Personal Growth",done:false}
 ];
-let history = JSON.parse(localStorage.getItem('history_v1') || '[]');
-let journal  = JSON.parse(localStorage.getItem('journal_v1')  || '[]');
-let activeCat = "All";
-let metricsRange = 7;
+var history = JSON.parse(localStorage.getItem("history_v1") || "[]");
+var journal  = JSON.parse(localStorage.getItem("journal_v1")  || "[]");
+var activeCat = "All";
+var metricsRange = 7;
 
 function todayStr(){return new Date().toISOString().slice(0,10);}
 
 function saveState(){
-  localStorage.setItem('goals_v1',JSON.stringify(goals));
-  const byCat={};
+  localStorage.setItem("goals_v1",JSON.stringify(goals));
+  var byCat={};
   Object.keys(CATS).forEach(function(c){
     var cg=goals.filter(function(g){return g.category===c;});
     byCat[c]={total:cg.length,done:cg.filter(function(g){return g.done;}).length};
@@ -190,67 +177,65 @@ function saveState(){
   var entry={date:todayStr(),total:goals.length,done:goals.filter(function(g){return g.done;}).length,byCat:byCat};
   var idx=history.findIndex(function(h){return h.date===todayStr();});
   if(idx>=0) history[idx]=entry; else history.push(entry);
-  localStorage.setItem('history_v1',JSON.stringify(history));
+  localStorage.setItem("history_v1",JSON.stringify(history));
 }
-function saveJournalState(){localStorage.setItem('journal_v1',JSON.stringify(journal));}
+function saveJournalState(){localStorage.setItem("journal_v1",JSON.stringify(journal));}
 
-document.getElementById('date-label').textContent =
-  new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+document.getElementById("date-label").textContent =
+  new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
 
-// ── GOALS ──
 function renderGoals(){
   var tabs=["All"].concat(Object.keys(CATS));
-  document.getElementById('cat-tabs').innerHTML=tabs.map(function(t){
-    return '<button class="cat-tab '+(activeCat===t?'active':'')+'" onclick="setCat(''+t+'')">'+
-      (t==="All"?"✦ All":CATS[t].icon+" "+t.split(" ")[0])+'</button>';
-  }).join('');
-  document.getElementById('section-label').textContent=
-    activeCat==="All"?"All Goals":CATS[activeCat].icon+" "+activeCat;
+  document.getElementById("cat-tabs").innerHTML=tabs.map(function(t){
+    return "<button class=\"cat-tab "+(activeCat===t?"active ":"")+"\" onclick=\"setCat(&quot;"+t+"&quot;)\">"+
+      (t==="All"?"&#10022; All":CATS[t].icon+" "+t.split(" ")[0])+"</button>";
+  }).join("");
+  document.getElementById("section-label").textContent=
+    activeCat==="All"?"All Goals":activeCat;
   var filtered=activeCat==="All"?goals:goals.filter(function(g){return g.category===activeCat;});
-  var list=document.getElementById('goals-list');
-  if(!filtered.length){list.innerHTML='<div class="empty">No goals here yet ✨</div>';return;}
+  var list=document.getElementById("goals-list");
+  if(!filtered.length){list.innerHTML="<div class=\"empty\">No goals here yet &#10024;</div>";return;}
   list.innerHTML=filtered.map(function(g){
     var cat=CATS[g.category];
-    return '<div class="goal-card '+(g.done?'done':'')+'" onclick="toggle('+g.id+')">'+
-      '<div class="checkbox '+(g.done?'checked':'')+'"></div>'+
-      '<div class="goal-info">'+
-      '<p class="goal-text '+(g.done?'done-text':'')+'">'+g.text+'</p>'+
-      '<span class="cat-pill" style="background:'+cat.color+';color:'+cat.text+'">'+cat.icon+' '+g.category+'</span>'+
-      '</div>'+
-      '<button class="del-btn" onclick="event.stopPropagation();removeGoal('+g.id+')">×</button>'+
-      '</div>';
-  }).join('');
+    return "<div class=\"goal-card "+(g.done?"done":"")+"\" onclick=\"toggle("+g.id+")\">"+
+      "<div class=\"checkbox "+(g.done?"checked":"")+"\" ></div>"+
+      "<div class=\"goal-info\">"+
+      "<p class=\"goal-text "+(g.done?"done-text":"")+"\" >"+g.text+"</p>"+
+      "<span class=\"cat-pill\" style=\"background:"+cat.color+";color:"+cat.text+"\">"+cat.icon+" "+g.category+"</span>"+
+      "</div>"+
+      "<button class=\"del-btn\" onclick=\"event.stopPropagation();removeGoal("+g.id+")\">&#215;</button>"+
+      "</div>";
+  }).join("");
 }
 function toggle(id){goals=goals.map(function(g){return g.id===id?Object.assign({},g,{done:!g.done}):g;});saveState();renderGoals();}
 function removeGoal(id){goals=goals.filter(function(g){return g.id!==id;});saveState();renderGoals();}
 function setCat(t){activeCat=t;renderGoals();}
 function showForm(){
-  document.getElementById('add-area').innerHTML=
-    '<div class="add-form">'+
-    '<input id="new-text" placeholder="What's your goal?" onkeydown="if(event.key==='Enter')saveGoal()" autofocus/>'+
-    '<select id="new-cat">'+Object.keys(CATS).map(function(c){return '<option>'+c+'</option>';}).join('')+'</select>'+
-    '<div class="form-btns">'+
-    '<button class="btn-cancel" onclick="cancelForm()">Cancel</button>'+
-    '<button class="btn-save" onclick="saveGoal()">Add Goal</button>'+
-    '</div></div>';
-  document.getElementById('new-text').focus();
+  document.getElementById("add-area").innerHTML=
+    "<div class=\"add-form\">"+
+    "<input id=\"new-text\" placeholder=\"What is your goal?\" onkeydown=\"if(event.key===&quot;Enter&quot;)saveGoal()\" autofocus/>"+
+    "<select id=\"new-cat\">"+Object.keys(CATS).map(function(c){return "<option>"+c+"</option>";}).join("")+"</select>"+
+    "<div class=\"form-btns\">"+
+    "<button class=\"btn-cancel\" onclick=\"cancelForm()\">Cancel</button>"+
+    "<button class=\"btn-save\" onclick=\"saveGoal()\">Add Goal</button>"+
+    "</div></div>";
+  document.getElementById("new-text").focus();
 }
 function saveGoal(){
-  var t=document.getElementById('new-text').value.trim();
-  var c=document.getElementById('new-cat').value;
+  var t=document.getElementById("new-text").value.trim();
+  var c=document.getElementById("new-cat").value;
   if(!t)return;
   goals.push({id:Date.now(),text:t,category:c,done:false});
   saveState();cancelForm();renderGoals();
 }
 function cancelForm(){
-  document.getElementById('add-area').innerHTML='<button class="add-btn" onclick="showForm()">+ Add New Goal</button>';
+  document.getElementById("add-area").innerHTML="<button class=\"add-btn\" onclick=\"showForm()\">+ Add New Goal</button>";
 }
 
-// ── METRICS ──
 function setRange(n,btn){
   metricsRange=n;
-  document.querySelectorAll('.range-btn').forEach(function(b){b.classList.remove('active');});
-  btn.classList.add('active');
+  document.querySelectorAll(".range-btn").forEach(function(b){b.classList.remove("active");});
+  btn.classList.add("active");
   renderMetrics();
 }
 function renderMetrics(){
@@ -278,52 +263,51 @@ function renderMetrics(){
   });
   var barDays=[];
   for(var i=6;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);barDays.push(d.toISOString().slice(0,10));}
-  var dayLabels=['Su','Mo','Tu','We','Th','Fr','Sa'];
-  document.getElementById('metrics-content').innerHTML=
-    '<div class="metric-card"><h3>Summary</h3><div class="stat-row">'+
-    '<div class="stat-box"><div class="stat-val">'+avgPct+'%</div><div class="stat-lbl">Avg completion</div></div>'+
-    '<div class="stat-box"><div class="stat-val">'+perfectDays+'</div><div class="stat-lbl">Perfect days</div></div>'+
-    '<div class="stat-box"><div class="stat-val">'+totalDays+'</div><div class="stat-lbl">Days tracked</div></div>'+
-    '</div></div>'+
-    '<div class="metric-card"><h3>Current Streak</h3>'+
-    '<div class="streak-num">'+streak+(streak>0?'🔥':'')+'</div>'+
-    '<div class="streak-lbl">consecutive perfect days</div></div>'+
-    '<div class="metric-card"><h3>Last 7 Days</h3>'+
+  var dayLabels=["Su","Mo","Tu","We","Th","Fr","Sa"];
+  document.getElementById("metrics-content").innerHTML=
+    "<div class=\"metric-card\"><h3>Summary</h3><div class=\"stat-row\">"+
+    "<div class=\"stat-box\"><div class=\"stat-val\">"+avgPct+"%</div><div class=\"stat-lbl\">Avg completion</div></div>"+
+    "<div class=\"stat-box\"><div class=\"stat-val\">"+perfectDays+"</div><div class=\"stat-lbl\">Perfect days</div></div>"+
+    "<div class=\"stat-box\"><div class=\"stat-val\">"+totalDays+"</div><div class=\"stat-lbl\">Days tracked</div></div>"+
+    "</div></div>"+
+    "<div class=\"metric-card\"><h3>Current Streak</h3>"+
+    "<div class=\"streak-num\">"+streak+(streak>0?" &#128293;":"")+"</div>"+
+    "<div class=\"streak-lbl\">consecutive perfect days</div></div>"+
+    "<div class=\"metric-card\"><h3>Last 7 Days</h3>"+
     barDays.map(function(d){
       var s=snapMap[d];var pct=s&&s.total?Math.round(s.done/s.total*100):0;
-      var dow=new Date(d+'T12:00:00').getDay();
-      return '<div class="bar-row"><span class="bar-day">'+dayLabels[dow]+'</span>'+
-        '<div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%"></div></div>'+
-        '<span class="bar-pct">'+pct+'%</span></div>';
-    }).join('')+'</div>'+
-    '<div class="metric-card"><h3>By Category</h3>'+
+      var dow=new Date(d+"T12:00:00").getDay();
+      return "<div class=\"bar-row\"><span class=\"bar-day\">"+dayLabels[dow]+"</span>"+
+        "<div class=\"bar-bg\"><div class=\"bar-fill\" style=\"width:"+pct+"%\"></div></div>"+
+        "<span class=\"bar-pct\">"+pct+"%</span></div>";
+    }).join("")+"</div>"+
+    "<div class=\"metric-card\"><h3>By Category</h3>"+
     Object.keys(CATS).map(function(c){
-      return '<div class="cat-stat-row">'+
-        '<span class="cat-stat-name">'+CATS[c].icon+' '+c+'</span>'+
-        '<span class="cat-stat-pct">'+catAvgs[c]+'%</span></div>';
-    }).join('')+'</div>';
+      return "<div class=\"cat-stat-row\">"+
+        "<span class=\"cat-stat-name\">"+CATS[c].icon+" "+c+"</span>"+
+        "<span class=\"cat-stat-pct\">"+catAvgs[c]+"%</span></div>";
+    }).join("")+"</div>";
 }
 
-// ── JOURNAL ──
 function showJournalForm(){
   var today=todayStr();
   var existing=journal.find(function(e){return e.date===today;});
-  document.getElementById('journal-compose-area').innerHTML=
-    '<div class="journal-compose"><p>Today's highlight</p>'+
-    '<textarea id="journal-input" placeholder="What stood out to you today?">'+
-    (existing?existing.text:'')+'</textarea>'+
-    '<div class="form-btns" style="margin-top:10px;">'+
-    '<button class="btn-cancel" onclick="hideJournalForm()">Cancel</button>'+
-    '<button class="btn-save" onclick="saveJournal()">Save Entry</button>'+
-    '</div></div>';
-  document.getElementById('journal-input').focus();
+  document.getElementById("journal-compose-area").innerHTML=
+    "<div class=\"journal-compose\">"+
+    "<p class=\"journal-compose-label\">Today's Highlight</p>"+
+    "<textarea id=\"journal-input\" placeholder=\"What stood out to you today?\">"+(existing?existing.text:"")+"</textarea>"+
+    "<div class=\"form-btns\" style=\"margin-top:10px;\">"+
+    "<button class=\"btn-cancel\" onclick=\"hideJournalForm()\">Cancel</button>"+
+    "<button class=\"btn-save\" onclick=\"saveJournal()\">Save Entry</button>"+
+    "</div></div>";
+  document.getElementById("journal-input").focus();
 }
 function hideJournalForm(){
-  document.getElementById('journal-compose-area').innerHTML=
-    '<button class="journal-add-btn" onclick="showJournalForm()">+ Add New Entry</button>';
+  document.getElementById("journal-compose-area").innerHTML=
+    "<button class=\"journal-add-btn\" onclick=\"showJournalForm()\">+ Add New Entry</button>";
 }
 function saveJournal(){
-  var text=document.getElementById('journal-input').value.trim();
+  var text=document.getElementById("journal-input").value.trim();
   if(!text)return;
   var today=todayStr();
   journal=journal.filter(function(e){return e.date!==today;});
@@ -336,21 +320,21 @@ function deleteJournal(date){
 }
 function renderJournal(){
   var today=todayStr();
-  var list=document.getElementById('journal-list');
+  var list=document.getElementById("journal-list");
   if(!journal.length){
-    list.innerHTML='<div class="empty">No entries yet ✨<br><span style="font-size:13px;opacity:0.7">Tap above to write your first one!</span></div>';
+    list.innerHTML="<div class=\"empty\">No entries yet &#10024;<br><span style=\"font-size:13px;opacity:0.7\">Tap above to write your first one!</span></div>";
     return;
   }
   list.innerHTML=journal.map(function(e){
-    var d=new Date(e.date+'T12:00:00');
-    var label=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+    var d=new Date(e.date+"T12:00:00");
+    var label=d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});
     var isToday=e.date===today;
-    return '<div class="journal-entry">'+
-      '<div class="journal-entry-date">'+label+
-      (isToday?'<span class="today-badge">TODAY</span>':'')+
-      '<button class="journal-entry-del" onclick="deleteJournal(''+e.date+'')">×</button></div>'+
-      '<p class="journal-entry-text">'+e.text+'</p></div>';
-  }).join('');
+    return "<div class=\"journal-entry\">"+
+      "<div class=\"journal-entry-date\">"+label+
+      (isToday?"<span class=\"today-badge\">TODAY</span>":"")+
+      "<button class=\"journal-entry-del\" onclick=\"deleteJournal(&quot;"+e.date+"&quot;)\">&#215;</button></div>"+
+      "<p class=\"journal-entry-text\">"+e.text+"</p></div>";
+  }).join("");
 }
 
 renderGoals();
