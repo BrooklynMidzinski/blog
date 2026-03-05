@@ -4,77 +4,261 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Goals App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: verdana, sans-serif; background-color: lightblue; min-height: 100vh; padding-bottom: 40px; }
-    h1 { border: 2px solid Tomato; border-radius: 10px; background-color: bisque; color: rgb(0,0,0); text-align: center; padding: 16px 24px; font-size: 28px; margin: 0; }
-    .subtitle { text-align: center; color: #555; font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase; padding: 10px 0 0; font-family: verdana; }
-    .container { max-width: 480px; margin: 0 auto; padding: 0 16px; }
-    .progress-wrap { display: flex; align-items: center; gap: 16px; background: bisque; border: 2px solid Tomato; border-radius: 10px; padding: 16px; margin: 16px 0; }
-    .ring { position: relative; width: 64px; height: 64px; flex-shrink: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(145deg, #e8f5f0 0%, #f0f7f4 50%, #e4f2ee 100%);
+      min-height: 100vh;
+      padding-bottom: 48px;
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(135deg, #2d7a6b 0%, #3a9688 60%, #4db6a4 100%);
+      padding: 48px 24px 32px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.07);
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -50px; left: 30px;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+    }
+    .header-date {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 6px;
+    }
+    .header h1 {
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 24px;
+    }
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .ring { position: relative; width: 66px; height: 66px; flex-shrink: 0; }
     .ring svg { transform: rotate(-90deg); }
-    .ring-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: #333; }
-    .progress-text p { margin: 0; font-family: verdana; }
-    .progress-text .big { font-size: 20px; font-weight: bold; color: #1a1a1a; }
-    .progress-text .small { font-size: 13px; color: #777; margin-top: 2px; }
-    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-    .tab { padding: 6px 14px; border-radius: 20px; border: 2px solid Tomato; cursor: pointer; font-size: 13px; font-weight: bold; font-family: verdana; background: bisque; color: #333; transition: all 0.2s; }
-    .tab.active { background: Tomato; color: white; }
-    .goal-card { display: flex; align-items: center; gap: 14px; background: white; border-radius: 10px; border: 2px solid #e0c8b0; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: opacity 0.2s; }
-    .goal-card.done { opacity: 0.55; }
-    .checkbox { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; border: 2px solid Tomato; background: transparent; }
-    .checkbox.checked { background: Tomato; border-color: Tomato; }
-    .checkbox.checked::after { content: "✓"; color: white; font-size: 14px; font-weight: bold; }
+    .ring-label {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; color: white;
+    }
+    .progress-text .big {
+      font-size: 22px; font-weight: 700; color: white; margin: 0;
+    }
+    .progress-text .small {
+      font-size: 13px; color: rgba(255,255,255,0.65); margin: 3px 0 0;
+    }
+
+    /* CONTAINER */
+    .container { max-width: 480px; margin: 0 auto; padding: 0 18px; }
+
+    /* TABS */
+    .tabs {
+      display: flex; gap: 8px; flex-wrap: nowrap;
+      overflow-x: auto; padding: 20px 0 12px;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      flex-shrink: 0;
+      padding: 7px 16px;
+      border-radius: 24px;
+      border: 1.5px solid #b2d8d0;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      background: white;
+      color: #4a7c75;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .tab.active {
+      background: #2d7a6b;
+      border-color: #2d7a6b;
+      color: white;
+      box-shadow: 0 4px 12px rgba(45,122,107,0.25);
+    }
+
+    /* GOAL CARDS */
+    .goal-card {
+      display: flex; align-items: center; gap: 14px;
+      background: white;
+      border-radius: 16px;
+      border: 1.5px solid #ddeee9;
+      padding: 16px 18px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(45,122,107,0.06);
+    }
+    .goal-card:hover { box-shadow: 0 4px 16px rgba(45,122,107,0.12); transform: translateY(-1px); }
+    .goal-card.done { opacity: 0.5; }
+
+    .checkbox {
+      width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.25s;
+      border: 2px solid #b2d8d0;
+      background: transparent;
+    }
+    .checkbox.checked {
+      background: linear-gradient(135deg, #2d7a6b, #4db6a4);
+      border-color: transparent;
+      box-shadow: 0 2px 8px rgba(45,122,107,0.3);
+    }
+    .checkbox.checked::after { content: "✓"; color: white; font-size: 13px; font-weight: 700; }
+
     .goal-info { flex: 1; }
-    .goal-text { font-family: verdana; font-size: 15px; font-weight: bold; color: #1a1a1a; margin: 0 0 3px; }
-    .goal-text.done-text { text-decoration: line-through; }
-    .goal-cat { font-size: 12px; font-weight: bold; font-family: verdana; }
-    .del-btn { background: none; border: none; cursor: pointer; font-size: 20px; color: #bbb; padding: 4px; line-height: 1; }
-    .del-btn:hover { color: Tomato; }
-    .add-btn { width: 100%; padding: 15px; border-radius: 10px; border: 2px dashed Tomato; background: transparent; cursor: pointer; font-size: 15px; color: Tomato; font-weight: bold; font-family: verdana; transition: background 0.2s; }
-    .add-btn:hover { background: bisque; }
-    .add-form { background: white; border-radius: 10px; border: 2px solid Tomato; padding: 16px; }
-    .add-form input, .add-form select { width: 100%; border: 2px solid #e0c8b0; border-radius: 8px; padding: 10px; font-size: 15px; font-family: verdana; margin-bottom: 10px; outline: none; background: #fffaf5; }
-    .add-form input:focus, .add-form select:focus { border-color: Tomato; }
+    .goal-text {
+      font-size: 15px; font-weight: 600; color: #1e3a35; margin: 0 0 3px;
+    }
+    .goal-text.done-text { text-decoration: line-through; color: #aaa; }
+    .goal-cat { font-size: 12px; font-weight: 500; }
+
+    .del-btn {
+      background: none; border: none; cursor: pointer;
+      font-size: 19px; color: #c5dbd7; padding: 4px; line-height: 1;
+      transition: color 0.2s;
+    }
+    .del-btn:hover { color: #e57373; }
+
+    /* CAT PILL */
+    .cat-pill {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    /* ADD BUTTON */
+    .add-btn {
+      width: 100%; padding: 15px;
+      border-radius: 16px;
+      border: 2px dashed #a8d5cb;
+      background: rgba(255,255,255,0.6);
+      cursor: pointer;
+      font-size: 14px; color: #3a9688; font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+      backdrop-filter: blur(4px);
+    }
+    .add-btn:hover { background: white; border-color: #2d7a6b; box-shadow: 0 4px 12px rgba(45,122,107,0.1); }
+
+    .add-form {
+      background: white; border-radius: 16px;
+      border: 1.5px solid #c8e8e1;
+      padding: 18px;
+      box-shadow: 0 4px 20px rgba(45,122,107,0.1);
+    }
+    .add-form input, .add-form select {
+      width: 100%;
+      border: 1.5px solid #ddeee9;
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      margin-bottom: 10px;
+      outline: none;
+      background: #f7fcfb;
+      color: #1e3a35;
+      transition: border-color 0.2s;
+    }
+    .add-form input:focus, .add-form select:focus { border-color: #3a9688; background: white; }
     .form-btns { display: flex; gap: 8px; }
-    .btn-cancel, .btn-save { flex: 1; padding: 10px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; font-weight: bold; font-family: verdana; }
-    .btn-cancel { background: lightblue; color: #333; }
-    .btn-save { background: Tomato; color: white; }
-    .empty { text-align: center; padding: 40px 0; color: #888; font-family: verdana; font-size: 15px; }
+    .btn-cancel {
+      flex: 1; padding: 11px; border-radius: 10px;
+      border: 1.5px solid #ddeee9; cursor: pointer;
+      font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif;
+      background: #f7fcfb; color: #4a7c75;
+    }
+    .btn-save {
+      flex: 1; padding: 11px; border-radius: 10px;
+      border: none; cursor: pointer;
+      font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #2d7a6b, #4db6a4);
+      color: white;
+      box-shadow: 0 4px 12px rgba(45,122,107,0.3);
+    }
+
+    .empty {
+      text-align: center; padding: 48px 0;
+      color: #8ab5ae; font-size: 15px; font-weight: 500;
+    }
+    .section-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: #7ab5ac; margin: 4px 0 10px;
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <p class="subtitle" id="date-label"></p>
-  <h1>Goals App</h1>
-  <div class="progress-wrap">
-    <div class="ring">
-      <svg width="64" height="64">
-        <circle cx="32" cy="32" r="26" fill="none" stroke="#e0c8b0" stroke-width="6"/>
-        <circle id="ring-fill" cx="32" cy="32" r="26" fill="none" stroke="Tomato" stroke-width="6"
-          stroke-linecap="round" stroke-dasharray="163.36" stroke-dashoffset="163.36"
-          style="transition: stroke-dashoffset 0.5s ease"/>
-      </svg>
-      <div class="ring-label" id="ring-pct">0%</div>
-    </div>
-    <div class="progress-text">
-      <p class="big" id="progress-big">0/0 done</p>
-      <p class="small" id="progress-small">0 remaining today</p>
+
+<div class="header">
+  <div class="container">
+    <p class="header-date" id="date-label"></p>
+    <h1>Goals App</h1>
+    <div class="progress-row">
+      <div class="ring">
+        <svg width="66" height="66">
+          <circle cx="33" cy="33" r="27" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="6"/>
+          <circle id="ring-fill" cx="33" cy="33" r="27" fill="none" stroke="white" stroke-width="6"
+            stroke-linecap="round"
+            stroke-dasharray="169.6"
+            stroke-dashoffset="169.6"
+            style="transition: stroke-dashoffset 0.6s ease"/>
+        </svg>
+        <div class="ring-label" id="ring-pct">0%</div>
+      </div>
+      <div class="progress-text">
+        <p class="big" id="progress-big">0/0 done</p>
+        <p class="small" id="progress-small">0 remaining today</p>
+      </div>
     </div>
   </div>
+</div>
+
+<div class="container">
   <div class="tabs" id="tabs"></div>
+  <p class="section-label" id="section-label">All Goals</p>
   <div id="goals-list"></div>
   <div id="add-area">
     <button class="add-btn" onclick="showForm()">+ Add New Goal</button>
   </div>
 </div>
+
 <script>
-  const CATEGORIES = {
-    "Health & Fitness":        { icon: "🏃", color: "#FF6B6B" },
-    "Habits & Daily Routines": { icon: "🌅", color: "#FF9F43" },
-    "Work & Productivity":     { icon: "💼", color: "#4A90D9" },
-    "Personal Growth":         { icon: "🌱", color: "#2ECC71" },
+  const CATS = {
+    "Health & Fitness":        { icon: "🏃", color: "#e8f5f0", text: "#2d7a6b" },
+    "Habits & Daily Routines": { icon: "🌅", color: "#fff8ee", text: "#b07d2e" },
+    "Work & Productivity":     { icon: "💼", color: "#eef4fd", text: "#2e5fa3" },
+    "Personal Growth":         { icon: "🌱", color: "#f0faf0", text: "#2e7a3a" },
   };
+
   let goals = [
     { id: 1, text: "30 min workout",           category: "Health & Fitness",        done: false },
     { id: 2, text: "Drink 8 glasses of water",  category: "Health & Fitness",        done: false },
@@ -84,54 +268,64 @@
     { id: 6, text: "Read for 20 minutes",       category: "Personal Growth",         done: false },
   ];
   let activeTab = "All";
+
   document.getElementById("date-label").textContent =
     new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+
   function render() {
     const done = goals.filter(g => g.done).length;
     const total = goals.length;
     const pct = total ? Math.round((done / total) * 100) : 0;
-    const circ = 2 * Math.PI * 26;
+    const circ = 2 * Math.PI * 27;
     document.getElementById("ring-fill").style.strokeDashoffset = circ * (1 - pct / 100);
     document.getElementById("ring-pct").textContent = pct + "%";
     document.getElementById("progress-big").textContent = done + "/" + total + " done";
     document.getElementById("progress-small").textContent = (total - done) + " remaining today";
-    const tabs = ["All", ...Object.keys(CATEGORIES)];
+
+    const tabs = ["All", ...Object.keys(CATS)];
     document.getElementById("tabs").innerHTML = tabs.map(t =>
       '<button class="tab ' + (activeTab === t ? "active" : "") + '" onclick="setTab(\'' + t + '\')">' +
-      (t === "All" ? "All" : CATEGORIES[t].icon + " " + t.split(" ")[0]) + '</button>'
+      (t === "All" ? "✦ All" : CATS[t].icon + " " + t.split(" ")[0]) + '</button>'
     ).join("");
+
+    document.getElementById("section-label").textContent =
+      activeTab === "All" ? "All Goals" : CATS[activeTab].icon + " " + activeTab;
+
     const filtered = activeTab === "All" ? goals : goals.filter(g => g.category === activeTab);
     const list = document.getElementById("goals-list");
     if (filtered.length === 0) {
-      list.innerHTML = '<div class="empty">No goals yet — add one below! ✨</div>';
+      list.innerHTML = '<div class="empty">No goals here yet ✨<br><span style="font-size:13px;opacity:0.7">Add one below!</span></div>';
     } else {
       list.innerHTML = filtered.map(g => {
-        const cat = CATEGORIES[g.category];
+        const cat = CATS[g.category];
         return '<div class="goal-card ' + (g.done ? "done" : "") + '" onclick="toggle(' + g.id + ')">' +
           '<div class="checkbox ' + (g.done ? "checked" : "") + '"></div>' +
           '<div class="goal-info">' +
           '<p class="goal-text ' + (g.done ? "done-text" : "") + '">' + g.text + '</p>' +
-          '<span class="goal-cat" style="color:' + cat.color + '">' + cat.icon + ' ' + g.category + '</span>' +
+          '<span class="cat-pill" style="background:' + cat.color + ';color:' + cat.text + '">' + cat.icon + ' ' + g.category + '</span>' +
           '</div>' +
-          '<button class="del-btn" onclick="event.stopPropagation(); remove(' + g.id + ')">×</button>' +
+          '<button class="del-btn" onclick="event.stopPropagation();remove(' + g.id + ')">×</button>' +
           '</div>';
       }).join("");
     }
   }
-  function toggle(id) { goals = goals.map(g => g.id === id ? { ...g, done: !g.done } : g); render(); }
+
+  function toggle(id) { goals = goals.map(g => g.id === id ? {...g, done: !g.done} : g); render(); }
   function remove(id) { goals = goals.filter(g => g.id !== id); render(); }
   function setTab(t) { activeTab = t; render(); }
+
   function showForm() {
     document.getElementById("add-area").innerHTML =
       '<div class="add-form">' +
-      '<input id="new-text" placeholder="What's your goal?" onkeydown="if(event.key==='Enter') saveGoal()" autofocus />' +
-      '<select id="new-cat">' + Object.keys(CATEGORIES).map(c => '<option>' + c + '</option>').join("") + '</select>' +
+      '<input id="new-text" placeholder="What's your goal?" onkeydown="if(event.key==='Enter')saveGoal()" autofocus />' +
+      '<select id="new-cat">' + Object.keys(CATS).map(c => '<option>' + c + '</option>').join("") + '</select>' +
       '<div class="form-btns">' +
       '<button class="btn-cancel" onclick="cancelForm()">Cancel</button>' +
       '<button class="btn-save" onclick="saveGoal()">Add Goal</button>' +
       '</div></div>';
     document.getElementById("new-text").focus();
   }
+
   function saveGoal() {
     const text = document.getElementById("new-text").value.trim();
     const cat = document.getElementById("new-cat").value;
@@ -139,9 +333,12 @@
     goals.push({ id: Date.now(), text, category: cat, done: false });
     cancelForm(); render();
   }
+
   function cancelForm() {
-    document.getElementById("add-area").innerHTML = '<button class="add-btn" onclick="showForm()">+ Add New Goal</button>';
+    document.getElementById("add-area").innerHTML =
+      '<button class="add-btn" onclick="showForm()">+ Add New Goal</button>';
   }
+
   render();
 </script>
 </body>
