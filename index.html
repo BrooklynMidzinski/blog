@@ -106,18 +106,38 @@
         /* Tasks */
         .task-item{background:white;border-radius:16px;border:1.5px solid #e8e8e3;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 6px rgba(0,0,0,0.05);transition:transform 0.12s;}.task-item.done-task{opacity:0.45;}.task-check{width:22px;height:22px;border-radius:6px;border:2px solid #b8d8d0;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:white;transition:all 0.2s;background:white;}.task-check.checked{background:#2d7a6b;border-color:#2d7a6b;}.task-label{flex:1;font-size:15px;font-weight:500;color:#1a1a1a;cursor:pointer;line-height:1.4;}.task-label.done-text{text-decoration:line-through;color:#aaa;}.task-del{background:none;border:none;cursor:pointer;font-size:18px;color:#ddd;padding:2px 6px;flex-shrink:0;line-height:1;transition:color 0.2s;}.task-del:hover{color:#e57373;}
 
-        /* Journal */
-        .journal-add-btn{width:100%;padding:15px;border-radius:16px;border:2px dashed #a8d5cb;background:rgba(255,255,255,0.6);cursor:pointer;font-size:14px;color:#3a9688;font-weight:600;font-family:'Inter',sans-serif;transition:all 0.2s;margin-bottom:16px;}
-        .journal-add-btn:hover{background:white;border-color:#2d7a6b;}
-        .journal-compose{background:white;border-radius:16px;border:1.5px solid #c8e8e1;padding:18px;margin-bottom:16px;box-shadow:0 2px 8px rgba(45,122,107,0.06);}
-        .journal-compose-label{font-size:12px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#7ab5ac;margin-bottom:10px;}
-        .journal-compose textarea{width:100%;border:1.5px solid #ddeee9;border-radius:10px;padding:12px 14px;font-size:14px;font-family:'Inter',sans-serif;outline:none;background:#f7fcfb;color:#1e3a35;resize:none;height:70px;line-height:1.5;}
-        .journal-compose textarea:focus{border-color:#3a9688;background:white;}
-        .journal-entry{background:white;border-radius:16px;border:1.5px solid #ddeee9;padding:16px 18px;margin-bottom:10px;box-shadow:0 2px 8px rgba(45,122,107,0.05);}
-        .journal-entry-date{font-size:11px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;color:#7ab5ac;margin-bottom:6px;}
-        .journal-entry-text{font-size:15px;color:#1e3a35;line-height:1.6;}
-        .journal-entry-del{float:right;background:none;border:none;cursor:pointer;font-size:16px;color:#c5dbd7;margin-left:8px;}
-        .journal-entry-del:hover{color:#e57373;}
+                /* Logs */
+        .log-rating-row{display:flex;gap:5px;margin:8px 0 14px;}
+        .log-rating-btn{flex:1;padding:8px 4px;border-radius:10px;border:1.5px solid #e0e0e0;background:white;font-size:20px;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;text-align:center;line-height:1.4;}
+        .log-rating-btn.sel{border-color:#2d7a6b;background:#eef6f3;transform:scale(1.08);box-shadow:0 2px 8px rgba(45,122,107,0.15);}
+        .log-entry-card{background:white;border-radius:16px;border:1.5px solid #ddeee9;padding:16px 18px;margin-bottom:10px;box-shadow:0 2px 8px rgba(45,122,107,0.05);}
+        .log-entry-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+        .log-entry-date{font-size:11px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;color:#7ab5ac;}
+        .log-entry-actions{display:flex;gap:6px;align-items:center;}
+        .log-entry-btn{background:none;border:none;cursor:pointer;padding:0;line-height:1;}
+        .log-entry-edit{font-size:13px;color:#7ab5ac;font-weight:600;padding:0 4px;}
+        .log-entry-del{font-size:15px;color:#c5dbd7;}
+        .log-entry-del:hover{color:#e57373;}
+        .log-entry-rating{font-size:22px;margin-bottom:6px;line-height:1;}
+        .log-entry-text{font-size:15px;color:#1e3a35;line-height:1.6;}
+        .log-graph-wrap{background:white;border-radius:16px;border:1.5px solid #ddeee9;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px rgba(45,122,107,0.06);}
+        .log-graph-title{font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#7ab5ac;margin-bottom:8px;}
+        .log-month-card{background:white;border-radius:16px;border:1.5px solid #e8e8e3;padding:0;margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,0.05);overflow:hidden;}
+        .log-month-hdr{display:flex;align-items:center;gap:8px;padding:14px 16px;cursor:pointer;user-select:none;}
+        .log-month-nm{font-size:14px;font-weight:700;color:#1a1a1a;flex:1;}
+        .log-month-cnt{font-size:12px;color:#aaa;font-weight:500;}
+        .log-month-avg{font-size:20px;line-height:1;}
+        .log-month-avg-num{font-size:14px;font-weight:700;color:#2d7a6b;min-width:28px;text-align:right;}
+        .log-month-chev{font-size:11px;color:#aaa;transition:transform 0.2s;flex-shrink:0;}
+        .log-month-chev.open{transform:rotate(180deg);}
+        .log-month-body{display:none;border-top:1px solid #f0f0ea;padding:0 16px;}
+        .log-month-body.open{display:block;}
+        .log-hist-entry{padding:10px 0;border-bottom:1px solid #f7f7f2;}
+        .log-hist-entry:last-child{border-bottom:none;}
+        .log-hist-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;}
+        .log-hist-date{font-size:11px;font-weight:700;color:#7ab5ac;text-transform:uppercase;letter-spacing:0.5px;}
+        .log-hist-rating{font-size:18px;line-height:1;}
+        .log-hist-text{font-size:14px;color:#1e3a35;line-height:1.5;}
         .today-badge{display:inline-block;background:#e8f5f0;color:#2d7a6b;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:8px;vertical-align:middle;}
     </style>
 </head>
@@ -130,7 +150,7 @@
         <div class="nav-tabs" id="nav-tabs">
             <button class="nav-tab active" data-page="goals"><span class="tab-icon">&#10022;</span><span class="tab-label">Goals</span></button>
             <button class="nav-tab" data-page="tasks"><span class="tab-icon">&#9745;</span><span class="tab-label">Tasks</span></button><button class="nav-tab" data-page="metrics"><span class="tab-icon">&#128202;</span><span class="tab-label">Metrics</span></button>
-            <button class="nav-tab" data-page="journal"><span class="tab-icon">&#128218;</span><span class="tab-label">Journal</span></button>
+            <button class="nav-tab" data-page="logs"><span class="tab-icon">&#128221;</span><span class="tab-label">Logs</span></button>
         </div>
     </div>
     <div class="container">
@@ -163,9 +183,13 @@
             <div class="subtabs" style="margin-bottom:16px"><button class="subtab active" onclick="setRange(7,this)">Weekly</button><button class="subtab" onclick="setRange(30,this)">Monthly</button></div>
             <div id="metrics-content"></div>
         </div>
-        <div class="page" id="page-journal">
-            <div id="journal-compose-area"><button class="journal-add-btn" onclick="showJournalForm()">&#43; Add New Entry</button></div>
-            <div id="journal-list"></div>
+        <div class="page" id="page-logs">
+            <div class="subtabs" id="logs-subtabs">
+                <button class="subtab active" onclick="setLogsTab('today',this)">Today</button>
+                <button class="subtab" onclick="setLogsTab('history',this)">History</button>
+            </div>
+            <div id="logs-today"></div>
+            <div id="logs-history" style="display:none"></div>
         </div>
     </div>
     <script>
@@ -179,7 +203,7 @@
             btn.classList.add("active");
             if(page==="metrics")renderMetrics();
             if(page==="tasks")renderTasks();
-            if(page==="journal")renderJournal();
+            if(page==="logs")renderLogs();
         });
 
         var CATS={
@@ -220,6 +244,159 @@
 
         var goalHistory=JSON.parse(localStorage.getItem("history_v1")||"[]");
         var journal=JSON.parse(localStorage.getItem("journal_v1")||"[]");
+
+        var logs=JSON.parse(localStorage.getItem('logs_v1')||'[]');
+        var LOG_EMOJIS=['','😔','😐','🙂','😊','🤩'];
+        var LOG_LBLS=['','Rough','Okay','Good','Great','Amazing'];
+        function saveLogsState(){localStorage.setItem('logs_v1',JSON.stringify(logs));}
+        function setLogsTab(tab,btn){
+          document.querySelectorAll('#logs-subtabs .subtab').forEach(function(b){b.classList.remove('active');});
+          btn.classList.add('active');
+          document.getElementById('logs-today').style.display=tab==='today'?'block':'none';
+          document.getElementById('logs-history').style.display=tab==='history'?'block':'none';
+          if(tab==='history')renderLogsHistory();
+        }
+        function buildLogGraph(){
+          var now=new Date(),y=now.getFullYear(),m=now.getMonth();
+          var dim=getDaysInMonth(y,m);var prefix=y+'-'+padNum(m+1);var pts=[];
+          for(var d=1;d<=dim;d++){var ds=prefix+'-'+padNum(d);var found=logs.find(function(x){return x.date===ds;});if(found&&found.rating)pts.push({d:d,r:found.rating});}
+          if(!pts.length)return '<div style="text-align:center;padding:22px 0;color:#c8c8c8;font-size:13px;font-weight:500;">Log your first day to see the graph ✨</div>';
+          var W=300,H=72,px=14,py=10;
+          var xScale=dim>1?(W-px*2)/(dim-1):0;
+          var coords=pts.map(function(p){return {x:px+(p.d-1)*xScale,y:H-py-((p.r-1)/4)*(H-py*2)};});
+          var line=coords.map(function(c,i){return (i===0?'M':'L')+c.x.toFixed(1)+','+c.y.toFixed(1);}).join(' ');
+          var area=coords.length>1?line+' L'+coords[coords.length-1].x.toFixed(1)+','+H+' L'+coords[0].x.toFixed(1)+','+H+' Z':'';
+          return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:68px;">'
+            +'<defs><linearGradient id="lgg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2d7a6b" stop-opacity="0.18"/><stop offset="100%" stop-color="#2d7a6b" stop-opacity="0"/></linearGradient></defs>'
+            +(area?'<path d="'+area+'" fill="url(#lgg)"/>':'')
+            +(coords.length>1?'<path d="'+line+'" fill="none" stroke="#2d7a6b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>':'')
+            +coords.map(function(c){return '<circle cx="'+c.x.toFixed(1)+'" cy="'+c.y.toFixed(1)+'" r="3.5" fill="white" stroke="#2d7a6b" stroke-width="2"/>';}).join('')
+            +'</svg>'
+            +'<div style="display:flex;justify-content:space-between;margin-top:3px;">'
+            +'<span style="font-size:10px;color:#ccc;">😔 Rough</span>'
+            +'<span style="font-size:10px;color:#aaa;font-weight:600;">'+MONTH_NAMES[m]+' '+y+'</span>'
+            +'<span style="font-size:10px;color:#ccc;">Amazing 🤩</span></div>';
+        }
+        function renderLogs(){
+          document.getElementById('logs-today').style.display='block';
+          document.getElementById('logs-history').style.display='none';
+          document.querySelectorAll('#logs-subtabs .subtab').forEach(function(b,i){b.classList.toggle('active',i===0);});
+          renderLogsToday();
+        }
+        function renderLogsToday(){
+          var today=todayStr(),now=new Date();
+          var existing=logs.find(function(e){return e.date===today;});
+          var graph='<div class="log-graph-wrap"><div class="log-graph-title">'+MONTH_NAMES[now.getMonth()]+' '+now.getFullYear()+' — Day Ratings</div>'+buildLogGraph()+'</div>';
+          var body;
+          if(existing){
+            body='<div class="log-entry-card">'
+              +'<div class="log-entry-top">'
+              +'<span class="log-entry-date">Today <span class="today-badge">TODAY</span></span>'
+              +'<div class="log-entry-actions">'
+              +'<button class="log-entry-btn log-entry-edit" onclick="editLog()">Edit</button>'
+              +'<button class="log-entry-btn log-entry-del" onclick="deleteLog(''+today+'')">&#215;</button>'
+              +'</div></div>'
+              +'<div class="log-entry-rating">'+LOG_EMOJIS[existing.rating]+' <span style="font-size:14px;font-weight:600;color:#555;">'+LOG_LBLS[existing.rating]+'</span></div>'
+              +'<div class="log-entry-text">'+existing.text+'</div>'
+              +'</div>';
+          }else{
+            body='<div id="log-add-area"><button class="add-btn" onclick="showLogForm(false)">&#43; Log Today</button></div>';
+          }
+          document.getElementById('logs-today').innerHTML=graph+body;
+        }
+        function showLogForm(edit){
+          var today=todayStr(),now=new Date();
+          var existing=edit?logs.find(function(e){return e.date===today;}):null;
+          var selR=existing?existing.rating:0;
+          var graph='<div class="log-graph-wrap"><div class="log-graph-title">'+MONTH_NAMES[now.getMonth()]+' '+now.getFullYear()+' — Day Ratings</div>'+buildLogGraph()+'</div>';
+          var rbtns=[1,2,3,4,5].map(function(r){
+            return '<button class="log-rating-btn'+(r===selR?' sel':'')+'" onclick="pickRating('+r+',this)">'
+              +LOG_EMOJIS[r]+'<br><span style="font-size:10px;color:#888;font-weight:600;">'+LOG_LBLS[r]+'</span></button>';
+          }).join('');
+          var form='<div class="add-form">'
+            +'<div style="font-size:12px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#7ab5ac;margin-bottom:6px;">How was today?</div>'
+            +'<div class="log-rating-row" id="log-r-row">'+rbtns+'</div>'
+            +'<input type="hidden" id="log-r-val" value="'+(selR||'')+'">'
+            +'<div style="font-size:12px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#7ab5ac;margin-bottom:6px;margin-top:4px;">Describe it in one sentence...</div>'
+            +'<textarea id="log-t-val" style="width:100%;border:1.5px solid #ddeee9;border-radius:10px;padding:11px 14px;font-size:14px;font-family:Inter,sans-serif;outline:none;background:#f7fcfb;color:#1e3a35;resize:none;height:72px;line-height:1.5;" placeholder="What stood out today?"></textarea>'
+            +'<div class="form-btns" style="margin-top:10px;">'
+            +'<button class="btn-cancel" onclick="cancelLogForm()">Cancel</button>'
+            +'<button class="btn-save" onclick="saveLog()">Save</button>'
+            +'</div></div>';
+          document.getElementById('logs-today').innerHTML=graph+form;
+          var ta=document.getElementById('log-t-val');
+          if(existing&&existing.text)ta.value=existing.text;
+          ta.focus();
+        }
+        function pickRating(r,btn){
+          document.querySelectorAll('.log-rating-btn').forEach(function(b){b.classList.remove('sel');});
+          btn.classList.add('sel');
+          document.getElementById('log-r-val').value=r;
+          var row=document.getElementById('log-r-row');
+          if(row){row.style.outline='none';}
+        }
+        function saveLog(){
+          var text=document.getElementById('log-t-val').value.trim();
+          var r=parseInt(document.getElementById('log-r-val').value);
+          if(!r){var row=document.getElementById('log-r-row');if(row){row.style.outline='2px solid #e57373';row.style.borderRadius='10px';}return;}
+          if(!text){var ta=document.getElementById('log-t-val');if(ta)ta.style.borderColor='#e57373';return;}
+          var today=todayStr();
+          logs=logs.filter(function(e){return e.date!==today;});
+          logs.unshift({date:today,text:text,rating:r});
+          saveLogsState();renderLogsToday();
+        }
+        function cancelLogForm(){renderLogsToday();}
+        function editLog(){showLogForm(true);}
+        function deleteLog(date){logs=logs.filter(function(e){return e.date!==date;});saveLogsState();renderLogsToday();}
+        function renderLogsHistory(){
+          var el=document.getElementById('logs-history');
+          var monthSet={};logs.forEach(function(e){monthSet[e.date.slice(0,7)]=true;});
+          var months=Object.keys(monthSet).sort().reverse();
+          if(!months.length){el.innerHTML="<div class='empty'>No logs yet &#10024;<br><span style='font-size:13px;opacity:0.7'>Start logging your days above!</span></div>";return;}
+          el.innerHTML=months.map(function(ym){
+            var parts=ym.split('-'),yr=parseInt(parts[0]),mn=parseInt(parts[1])-1;
+            var ml=logs.filter(function(e){return e.date.startsWith(ym);}).sort(function(a,b){return b.date.localeCompare(a.date);});
+            var avg=ml.length?(ml.reduce(function(s,e){return s+e.rating;},0)/ml.length).toFixed(1):'-';
+            var avgR=avg!=='-'?Math.round(parseFloat(avg)):0;
+            var dim=getDaysInMonth(yr,mn);var pts=[];
+            for(var d=1;d<=dim;d++){var ds=yr+'-'+padNum(mn+1)+'-'+padNum(d);var en=logs.find(function(x){return x.date===ds;});if(en&&en.rating)pts.push({d:d,r:en.rating});}
+            var miniSvg='';
+            if(pts.length>1){
+              var W2=90,H2=28,px2=6,py2=4;
+              var xS2=dim>1?(W2-px2*2)/(dim-1):0;
+              var c2=pts.map(function(p){return {x:px2+(p.d-1)*xS2,y:H2-py2-((p.r-1)/4)*(H2-py2*2)};});
+              var l2=c2.map(function(c,i){return (i===0?'M':'L')+c.x.toFixed(1)+','+c.y.toFixed(1);}).join(' ');
+              miniSvg='<svg viewBox="0 0 '+W2+' '+H2+'" style="width:56px;height:20px;margin-right:6px;flex-shrink:0;">'
+                +'<path d="'+l2+'" fill="none" stroke="#4db6a4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>'
+                +c2.map(function(c){return '<circle cx="'+c.x.toFixed(1)+'" cy="'+c.y.toFixed(1)+'" r="2" fill="#4db6a4"/>';}).join('')
+                +'</svg>';
+            }
+            var entries=ml.map(function(e){
+              var d2=new Date(e.date+'T12:00:00');
+              var lbl=d2.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+              return '<div class="log-hist-entry">'
+                +'<div class="log-hist-top"><span class="log-hist-date">'+lbl+'</span><span class="log-hist-rating">'+LOG_EMOJIS[e.rating]+'</span></div>'
+                +'<div class="log-hist-text">'+e.text+'</div>'
+                +'</div>';
+            }).join('');
+            return '<div class="log-month-card">'
+              +'<div class="log-month-hdr" onclick="toggleLogMonth('lm-'+ym+'')">'
+              +'<span class="log-month-nm">'+MONTH_NAMES[mn]+' '+yr+'</span>'
+              +miniSvg
+              +'<span class="log-month-cnt">'+ml.length+(ml.length===1?' entry':' entries')+'</span>'
+              +(avgR?'<span class="log-month-avg">'+LOG_EMOJIS[avgR]+'</span>':'')
+              +'<span class="log-month-avg-num">'+(avg!=='-'?avg+'/5':'')+'</span>'
+              +'<span class="log-month-chev" id="lchev-'+ym+'">&#9660;</span>'
+              +'</div>'
+              +'<div class="log-month-body" id="lm-'+ym+'">'+entries+'</div>'
+              +'</div>';
+          }).join('');
+        }
+        function toggleLogMonth(id){
+          var el=document.getElementById(id);
+          var ym=id.replace('lm-','');var chev=document.getElementById('lchev-'+ym);
+          if(!el)return;var open=el.classList.toggle('open');if(chev)chev.classList.toggle('open',open);
+        }
         var metricsRange=7;
         var monthlyTasks=JSON.parse(localStorage.getItem("tasks_v1")||"[]");
 
