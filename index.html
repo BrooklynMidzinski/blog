@@ -294,7 +294,7 @@
               +'<span class="log-entry-date">Today <span class="today-badge">TODAY</span></span>'
               +'<div class="log-entry-actions">'
               +'<button class="log-entry-btn log-entry-edit" onclick="editLog()">Edit</button>'
-              +'<button class="log-entry-btn log-entry-del" onclick="deleteLog(''+today+'')">&#215;</button>'
+              +'<button class="log-entry-btn log-entry-del" onclick="deleteTodayLog()">&#215;</button>'
               +'</div></div>'
               +'<div class="log-entry-rating">'+LOG_EMOJIS[existing.rating]+' <span style="font-size:14px;font-weight:600;color:#555;">'+LOG_LBLS[existing.rating]+'</span></div>'
               +'<div class="log-entry-text">'+existing.text+'</div>'
@@ -348,6 +348,7 @@
         function cancelLogForm(){renderLogsToday();}
         function editLog(){showLogForm(true);}
         function deleteLog(date){logs=logs.filter(function(e){return e.date!==date;});saveLogsState();renderLogsToday();}
+        function deleteTodayLog(){deleteLog(todayStr());}
         function renderLogsHistory(){
           var el=document.getElementById('logs-history');
           var monthSet={};logs.forEach(function(e){monthSet[e.date.slice(0,7)]=true;});
@@ -380,7 +381,7 @@
                 +'</div>';
             }).join('');
             return '<div class="log-month-card">'
-              +'<div class="log-month-hdr" onclick="toggleLogMonth('lm-'+ym+'')">'
+              +'<div class="log-month-hdr" data-ym="'+ym+'" onclick="toggleLogMonth(this)">'
               +'<span class="log-month-nm">'+MONTH_NAMES[mn]+' '+yr+'</span>'
               +miniSvg
               +'<span class="log-month-cnt">'+ml.length+(ml.length===1?' entry':' entries')+'</span>'
@@ -392,9 +393,10 @@
               +'</div>';
           }).join('');
         }
-        function toggleLogMonth(id){
-          var el=document.getElementById(id);
-          var ym=id.replace('lm-','');var chev=document.getElementById('lchev-'+ym);
+        function toggleLogMonth(hdr){
+          var ym=hdr.getAttribute('data-ym');
+          var el=document.getElementById('lm-'+ym);
+          var chev=document.getElementById('lchev-'+ym);
           if(!el)return;var open=el.classList.toggle('open');if(chev)chev.classList.toggle('open',open);
         }
         var metricsRange=7;
