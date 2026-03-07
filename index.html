@@ -407,6 +407,9 @@ if(text.length<=15)return text;var words=text.split(' ');var s=words.slice(0,3).
 function shortGoalName(text){
 if(text.length<=15)return text;var words=text.split(' ');var s=words.slice(0,3).join(' ');if(s.length<=15)return s;s=words.slice(0,2).join(' ');if(s.length<=15)return s;return words[0].slice(0,15);
 }
+function shortGoalName(text){
+if(text.length<=15)return text;var words=text.split(' ');var s=words.slice(0,3).join(' ');if(s.length<=15)return s;s=words.slice(0,2).join(' ');if(s.length<=15)return s;return words[0].slice(0,15);
+}
 function renderMetrics(){
 var today=todayStr(),now=new Date();
 var days=[];
@@ -436,17 +439,20 @@ totalDaysCount+=daysToCount;
 for(var day=1;day<=daysToCount;day++){
 var ds=yr2+'-'+padNum(mn2+1)+'-'+padNum(day);
 var dc1=completions[ds]?completions[ds].length:0;
-totalDone+=dc1;
-if(goals.length>0&&dc1/goals.length>=0.7)above70Count++;
+var pctDay=goals.length>0?dc1/goals.length*100:0;
+if(pctDay>=70)above70Count++;
+if(pctDay>=50)totalDone++;
 }
 });
 avgPct=totalDaysCount>0?Math.round(above70Count/totalDaysCount*100):0;
 }
 var checkD=new Date();
 while(true){var dsc=checkD.getFullYear()+'-'+padNum(checkD.getMonth()+1)+'-'+padNum(checkD.getDate());var dcc=completions[dsc]?completions[dsc].length:0;if(goals.length>0&&dcc===goals.length){streak++;checkD.setDate(checkD.getDate()-1);}else break;}
+var statLbl1=metricsRange===7?'% Met':'Days 70%+';
+var statLbl2=metricsRange===7?'Total Done':'Colored Days';
 var statsHtml='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px;">'
-+'<div style="background:white;border-radius:14px;padding:14px 8px;text-align:center;border:1.5px solid #ddeee9;"><div style="font-size:22px;font-weight:800;color:#e74c3c;line-height:1;">'+avgPct+'%</div><div style="font-size:10px;color:#aaa;font-weight:600;margin-top:4px;">'+(metricsRange===7?'% Met':'Days 70%+')+'</div></div>'
-+'<div style="background:white;border-radius:14px;padding:14px 8px;text-align:center;border:1.5px solid #ddeee9;"><div style="font-size:22px;font-weight:800;color:#27ae60;line-height:1;">'+totalDone+'</div><div style="font-size:10px;color:#aaa;font-weight:600;margin-top:4px;">Total Done</div></div>'
++'<div style="background:white;border-radius:14px;padding:14px 8px;text-align:center;border:1.5px solid #ddeee9;"><div style="font-size:22px;font-weight:800;color:#e74c3c;line-height:1;">'+avgPct+'%</div><div style="font-size:10px;color:#aaa;font-weight:600;margin-top:4px;">'+statLbl1+'</div></div>'
++'<div style="background:white;border-radius:14px;padding:14px 8px;text-align:center;border:1.5px solid #ddeee9;"><div style="font-size:22px;font-weight:800;color:#27ae60;line-height:1;">'+totalDone+'</div><div style="font-size:10px;color:#aaa;font-weight:600;margin-top:4px;">'+statLbl2+'</div></div>'
 +'<div style="background:white;border-radius:14px;padding:14px 8px;text-align:center;border:1.5px solid #ddeee9;"><div style="font-size:22px;font-weight:800;color:#f39c12;line-height:1;">&#128293;'+streak+'<span style="font-size:11px">d</span></div><div style="font-size:10px;color:#aaa;font-weight:600;margin-top:4px;">Streak</div></div>'
 +'</div>';
 var gridHtml='';
