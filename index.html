@@ -216,7 +216,7 @@
         var metricsRange=7;
 
         // Date helpers
-        function todayStr(){return new Date().toISOString().slice(0,10);}
+        function todayStr(){var d=new Date();return d.getFullYear()+"-"+padNum(d.getMonth()+1)+"-"+padNum(d.getDate());}
         function getDaysInMonth(y,m){return new Date(y,m+1,0).getDate();}
         function padNum(n){return n<10?"0"+n:""+n;}
         var MONTH_NAMES=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -405,7 +405,7 @@
 
         function renderMetrics(){
             var days=[];
-            for(var i=metricsRange-1;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);days.push(d.toISOString().slice(0,10));}
+            for(var i=metricsRange-1;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);days.push(d.getFullYear()+"-"+padNum(d.getMonth()+1)+"-"+padNum(d.getDate()));}
             var today=todayStr();
             var snapMap={};
             goalHistory.forEach(function(h){snapMap[h.date]=h;});
@@ -428,7 +428,7 @@
                 catAvgs[c]=sl.length?Math.round(sl.reduce(function(a,h){return a+h.byCat[c].done/h.byCat[c].total*100;},0)/sl.length):0;
             });
             var barDays=[];
-            for(var k=6;k>=0;k--){var bd=new Date();bd.setDate(bd.getDate()-k);barDays.push(bd.toISOString().slice(0,10));}
+            for(var k=6;k>=0;k--){var bd=new Date();bd.setDate(bd.getDate()-k);barDays.push(bd.getFullYear()+"-"+padNum(bd.getMonth()+1)+"-"+padNum(bd.getDate()));}
             var dl=["Su","Mo","Tu","We","Th","Fr","Sa"];
             document.getElementById("metrics-content").innerHTML=
                 "<div class='metric-card'><h3>Summary</h3><div class='stat-row'>"
