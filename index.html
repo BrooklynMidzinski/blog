@@ -149,12 +149,7 @@
             </div>
         </div>
         <div class="page" id="page-metrics">
-            <div class="metrics-range">
-                <button class="range-btn active" onclick="setRange(7,this)">7 days</button>
-                <button class="range-btn" onclick="setRange(30,this)">30 days</button>
-                <button class="range-btn" onclick="setRange(90,this)">3 months</button>
-                <button class="range-btn" onclick="setRange(365,this)">All time</button>
-            </div>
+            <div class="subtabs" style="margin-bottom:16px"><button class="subtab active" onclick="setRange(7,this)">Weekly</button><button class="subtab" onclick="setRange(30,this)">Monthly</button><button class="subtab" onclick="setRange(365,this)">All Time</button></div>
             <div id="metrics-content"></div>
         </div>
         <div class="page" id="page-journal">
@@ -398,64 +393,87 @@
 
         function setRange(n,btn){
             metricsRange=n;
-            document.querySelectorAll(".range-btn").forEach(function(b){b.classList.remove("active");});
+            document.querySelectorAll("#page-metrics .subtab").forEach(function(b){b.classList.remove("active");});
             btn.classList.add("active");
             renderMetrics();
         }
 
         function renderMetrics(){
-            var days=[];
-            for(var i=metricsRange-1;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);days.push(d.getFullYear()+"-"+padNum(d.getMonth()+1)+"-"+padNum(d.getDate()));}
-            var today=todayStr();
-            var snapMap={};
-            goalHistory.forEach(function(h){snapMap[h.date]=h;});
-            var todayDone=completions[today]?completions[today].length:0;
-            var byCatToday={};
-            Object.keys(CATS).forEach(function(c){
-                var cg=goals.filter(function(g){return g.category===c;});
-                byCatToday[c]={total:cg.length,done:cg.filter(function(g){return completions[today]&&completions[today].indexOf(g.id)!==-1;}).length};
-            });
-            snapMap[today]={date:today,total:goals.length,done:todayDone,byCat:byCatToday};
-            var relevant=days.map(function(d){return snapMap[d];}).filter(Boolean);
-            var totalDays=relevant.length;
-            var avgPct=totalDays?Math.round(relevant.reduce(function(a,h){return a+(h.total?h.done/h.total*100:0);},0)/totalDays):0;
-            var perfectDays=relevant.filter(function(h){return h.total>0&&h.done===h.total;}).length;
-            var streak=0;
-            for(var j=days.length-1;j>=0;j--){var s=snapMap[days[j]];if(s&&s.total>0&&s.done===s.total)streak++;else break;}
-            var catAvgs={};
-            Object.keys(CATS).forEach(function(c){
-                var sl=relevant.filter(function(h){return h.byCat&&h.byCat[c]&&h.byCat[c].total>0;});
-                catAvgs[c]=sl.length?Math.round(sl.reduce(function(a,h){return a+h.byCat[c].done/h.byCat[c].total*100;},0)/sl.length):0;
-            });
-            var barDays=[];
-            for(var k=6;k>=0;k--){var bd=new Date();bd.setDate(bd.getDate()-k);barDays.push(bd.getFullYear()+"-"+padNum(bd.getMonth()+1)+"-"+padNum(bd.getDate()));}
-            var dl=["Su","Mo","Tu","We","Th","Fr","Sa"];
-            document.getElementById("metrics-content").innerHTML=
-                "<div class='metric-card'><h3>Summary</h3><div class='stat-row'>"
-                +"<div class='stat-box'><div class='stat-val'>"+avgPct+"%</div><div class='stat-lbl'>Avg completion</div></div>"
-                +"<div class='stat-box'><div class='stat-val'>"+perfectDays+"</div><div class='stat-lbl'>Perfect days</div></div>"
-                +"<div class='stat-box'><div class='stat-val'>"+totalDays+"</div><div class='stat-lbl'>Days tracked</div></div>"
-                +"</div></div>"
-                +"<div class='metric-card'><h3>Current Streak</h3>"
-                +"<div class='streak-num'>"+streak+(streak>0?" &#128293;":"")+"</div>"
-                +"<div class='streak-lbl'>consecutive perfect days</div></div>"
-                +"<div class='metric-card'><h3>Last 7 Days</h3>"
-                +barDays.map(function(d){
-                    var s=snapMap[d];var pct=s&&s.total?Math.round(s.done/s.total*100):0;
-                    var dow=new Date(d+"T12:00:00").getDay();
-                    return "<div class='bar-row'><span class='bar-day'>"+dl[dow]+"</span>"
-                        +"<div class='bar-bg'><div class='bar-fill' style='width:"+pct+"%'></div></div>"
-                        +"<span class='bar-pct'>"+pct+"%</span></div>";
-                }).join("")+"</div>"
-                +"<div class='metric-card'><h3>By Category</h3>"
-                +Object.keys(CATS).map(function(c){
-                    return "<div class='cat-stat-row'>"
-                        +"<span class='cat-stat-name'>"+CATS[c].icon+" "+c+"</span>"
-                        +"<span class='cat-stat-pct'>"+catAvgs[c]+"%</span></div>";
-                }).join("")+"</div>";
-        }
-
-        function showJournalForm(){
+var today=todayStr(),now=new Date(),days=[];
+for(var i=metricsRange-1;i>=0;i--){var dd=new Date();dd.setDate(dd.getDate()-i);days.push(dd.getFullYear()+"-"+padNum(dd.getMonth()+1)+"-"+padNum(dd.getDate()));}
+var snapMap={};goalHistory.forEach(function(h){snapMap[h.date]=h;});
+var todayDone=completions[today]?completions[today].length:0;
+snapMap[today]={date:today,total:goals.length,done:todayDone};
+var relevant=days.map(function(d){return snapMap[d];}).filter(Boolean);
+var totalDays=relevant.length;
+var avgPct=totalDays?Math.round(relevant.reduce(function(a,h){return a+(h.total?h.done/h.total*100:0);},0)/totalDays):0;
+var perfectDays=relevant.filter(function(h){return h.total>0&&h.done===h.total;}).length;
+var totalDone=days.reduce(function(acc,d){return acc+(completions[d]?completions[d].length:0);},0);
+var streak=0;for(var j=days.length-1;j>=0;j--){var s=snapMap[days[j]];if(s&&s.total>0&&s.done===s.total)streak++;else break;}
+var statsHtml='<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-top:14px;">'
++'<div style="background:white;border-radius:14px;padding:14px 8px;text-align:center;border:1.5px solid #ddeee9;"><div style="font-size:22px;font-weight:800;color:#e74c3c;line-height:1;">'+avgPct+'%</div><div style="font-size:10px;color:#aaa;font-weight:600;margin-top:4px;">Met</div></div>'
++'<div style="background:white;border-radius:14px;padding:14px 8px;text-align:center;border:1.5px solid #ddeee9;"><div style="font-size:22px;font-weight:800;color:#3498db;line-height:1;">'+perfectDays+'<span style="font-size:11px">d</span></div><div style="font-size:10px;color:#aaa;font-weight:600;margin-top:4px;">Best Days</div></div>'
++'<div style="background:white;border-radius:14px;padding:14px 8px;text-align:center;border:1.5px solid #ddeee9;"><div style="font-size:22px;font-weight:800;color:#27ae60;line-height:1;">'+totalDone+'</div><div style="font-size:10px;color:#aaa;font-weight:600;margin-top:4px;">Total Done</div></div>'
++'<div style="background:white;border-radius:14px;padding:14px 8px;text-align:center;border:1.5px solid #ddeee9;"><div style="font-size:22px;font-weight:800;color:#f39c12;line-height:1;">'+streak+'<span style="font-size:11px">d</span></div><div style="font-size:10px;color:#aaa;font-weight:600;margin-top:4px;">Streak</div></div>'
++'</div>';
+var gridHtml='';
+if(metricsRange===7){
+var DL=['S','M','T','W','T','F','S'];
+var hdr='<div style="display:flex;align-items:center;padding-bottom:8px;border-bottom:1px solid #f0f0ea;margin-bottom:2px;">'
++'<div style="width:90px;flex-shrink:0;"></div>'
++'<div style="display:flex;gap:5px;">'
++days.map(function(d){return '<div style="width:26px;text-align:center;font-size:11px;font-weight:700;color:#b0b8c1;">'+DL[new Date(d+'T12:00:00').getDay()]+'</div>';}).join('')
++'</div><div style="width:28px;flex-shrink:0;"></div></div>';
+var rows=goals.map(function(g){
+var cat=CATS[g.category],dc=0;
+var dots=days.map(function(d){var done=completions[d]&&completions[d].indexOf(g.id)!==-1;if(done)dc++;return '<div style="width:26px;height:26px;border-radius:8px;background:'+(done?cat.color:'#e8e8e3')+';flex-shrink:0;'+(done?'box-shadow:0 2px 5px '+cat.color+'44;':'')+'"></div>';}).join('');
+return '<div style="display:flex;align-items:center;padding:6px 0;border-bottom:1px solid #f7f7f2;">'
++'<div style="width:90px;flex-shrink:0;font-size:12px;font-weight:600;color:#333;display:flex;align-items:center;gap:5px;overflow:hidden;"><span style="flex-shrink:0;font-size:16px;">'+cat.icon+'</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+g.text+'</span></div>'
++'<div style="display:flex;gap:5px;">'+dots+'</div>'
++'<div style="width:28px;flex-shrink:0;text-align:center;font-size:15px;">'+(dc===7?'&#127885;':'')+'</div>'
++'</div>';
+}).join('');
+var best='<div style="display:flex;align-items:center;padding:8px 0 2px;">'
++'<div style="width:90px;flex-shrink:0;font-size:11px;font-weight:700;color:#2d7a6b;letter-spacing:0.3px;">Best Day</div>'
++'<div style="display:flex;gap:5px;">'
++days.map(function(d){var ok=goals.length>0&&goals.every(function(g){return completions[d]&&completions[d].indexOf(g.id)!==-1;});return '<div style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:15px;">'+(ok?'&#127942;':'')+'</div>';}).join('')
++'</div><div style="width:28px;flex-shrink:0;"></div></div>';
+gridHtml='<div style="background:white;border-radius:18px;padding:16px 14px;box-shadow:0 2px 8px rgba(45,122,107,0.06);border:1.5px solid #ddeee9;overflow:hidden;">'+hdr+rows+best+'</div>';
+}else if(metricsRange===30){
+var mn=now.getMonth(),yr=now.getFullYear(),dim=getDaysInMonth(yr,mn);
+var bars=goals.map(function(g){
+var cat=CATS[g.category],done=getMonthlyCount(g.id,yr,mn),pct=Math.round(done/dim*100);
+return '<div style="margin-bottom:13px;">'
++'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;"><div style="font-size:13px;font-weight:600;color:#333;display:flex;align-items:center;gap:6px;overflow:hidden;flex:1;min-width:0;"><span style="flex-shrink:0;font-size:16px;">'+cat.icon+'</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+g.text+'</span></div>'
++'<span style="font-size:12px;font-weight:700;color:'+cat.color+';flex-shrink:0;margin-left:10px;">'+done+'/'+dim+'</span></div>'
++'<div style="height:9px;background:#e8e8e3;border-radius:5px;overflow:hidden;"><div style="height:100%;width:'+pct+'%;background:'+cat.color+';border-radius:5px;transition:width 0.5s ease;min-width:'+(done>0?'6px':'0')+';"></div></div>'
++'</div>';
+}).join('');
+gridHtml='<div style="background:white;border-radius:18px;padding:18px 18px;box-shadow:0 2px 8px rgba(45,122,107,0.06);border:1.5px solid #ddeee9;">'
++'<div style="font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#7ab5ac;margin-bottom:14px;">'+MONTH_NAMES[mn]+' '+yr+'</div>'
++bars+'</div>';
+}else{
+var catData=Object.keys(CATS).map(function(c){
+var cg=goals.filter(function(g){return g.category===c;});
+if(!cg.length)return null;
+var allDs=Object.keys(completions),tot=0;
+cg.forEach(function(g){allDs.forEach(function(d){if(completions[d]&&completions[d].indexOf(g.id)!==-1)tot++;});});
+var pct=allDs.length?Math.round(tot/(cg.length*allDs.length)*100):0;
+return {c:c,icon:CATS[c].icon,color:CATS[c].color,pct:pct,tot:tot};
+}).filter(Boolean);
+var cats=catData.map(function(cd){
+return '<div style="margin-bottom:14px;">'
++'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;"><div style="font-size:13px;font-weight:600;color:#333;display:flex;align-items:center;gap:7px;"><span style="font-size:16px;">'+cd.icon+'</span><span>'+cd.c+'</span></div>'
++'<span style="font-size:13px;font-weight:700;color:'+cd.color+';">'+cd.pct+'%</span></div>'
++'<div style="height:9px;background:#e8e8e3;border-radius:5px;overflow:hidden;"><div style="height:100%;width:'+cd.pct+'%;background:'+cd.color+';border-radius:5px;"></div></div>'
++'</div>';
+}).join('');
+gridHtml='<div style="background:white;border-radius:18px;padding:18px 18px;box-shadow:0 2px 8px rgba(45,122,107,0.06);border:1.5px solid #ddeee9;">'
++'<div style="font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#7ab5ac;margin-bottom:14px;">By Category — All Time</div>'
++cats+'</div>';
+}
+document.getElementById('metrics-content').innerHTML=gridHtml+statsHtml;
+} function showJournalForm(){
             var today=todayStr();
             var existing=journal.find(function(e){return e.date===today;});
             document.getElementById("journal-compose-area").innerHTML=
