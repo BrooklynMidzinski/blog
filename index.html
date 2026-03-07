@@ -236,7 +236,7 @@
             }).sort().reverse();
             if(!dates.length)return "not started";
             var diff=Math.floor((new Date()-new Date(dates[0]+"T12:00:00"))/86400000);
-            if(diff===0)return "done today &#10003;";
+            if(diff<=0)return "done today &#10003;";
             if(diff===1)return "1d ago";
             return diff+"d ago";
         }
