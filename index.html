@@ -37,7 +37,7 @@
         /* Goal bar cards */
         .goal-bar-card{position:relative;border-radius:20px;background:#e0dfd9;overflow:hidden;margin-bottom:13px;cursor:pointer;height:86px;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 8px rgba(0,0,0,0.07);}
         .goal-bar-card:active{transform:scale(0.97);}
-        .goal-bar-fill{position:absolute;left:0;top:0;bottom:0;border-radius:20px;transition:width 0.7s cubic-bezier(0.4,0,0.2,1);min-width:56px;}
+        .goal-bar-fill{position:absolute;left:0;top:0;bottom:0;border-radius:20px;transition:width 0.7s cubic-bezier(0.4,0,0.2,1);}
         .goal-bar-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 18px 0 16px;}
         .goal-bar-left{display:flex;align-items:center;gap:11px;}
         .goal-bar-emoji{font-size:28px;line-height:1;flex-shrink:0;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.15));}
@@ -293,7 +293,7 @@
             var dim=getDaysInMonth(now.getFullYear(),now.getMonth());
             var done=getMonthlyCount(g.id,now.getFullYear(),now.getMonth());
             var pct=Math.round(done/dim*100);
-            card.querySelector(".goal-bar-fill").style.width=pct+"%";
+            var fill=card.querySelector(".goal-bar-fill");fill.style.width=(done>0?Math.max(pct,4)+"%":"0%");if(done>0){var g2=goals.find(function(x){return x.id===g.id;});fill.style.background=CATS[g2.category].color;}else{fill.style.background="transparent";}
             card.querySelector(".goal-bar-count").textContent=done+" / "+dim;
             card.querySelector(".goal-bar-togo").textContent=(dim-done)+" to go";
             card.querySelector(".goal-bar-time").innerHTML=getLastLabel(g.id);
@@ -310,7 +310,7 @@
                 var done=getMonthlyCount(g.id,now.getFullYear(),now.getMonth());
                 var pct=Math.round(done/dim*100);
                 return "<div class='goal-bar-card' data-id='"+g.id+"' onclick='toggle("+g.id+")'>"
-                    +"<div class='goal-bar-fill' style='width:"+pct+"%;background:"+cat.color+"'></div>"
+                    +"<div class='goal-bar-fill' style='width:"+(done>0?Math.max(pct,4)+"%;background:"+cat.color:"0%")+"'></div>"
                     +"<div class='goal-bar-inner'>"
                     +"<div class='goal-bar-left'>"
                     +"<span class='goal-bar-emoji'>"+cat.icon+"</span>"
