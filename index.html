@@ -404,18 +404,24 @@ if(text.length<=15)return text;var words=text.split(' ');var s=words.slice(0,3).
 function shortGoalName(text){
 if(text.length<=15)return text;var words=text.split(' ');var s=words.slice(0,3).join(' ');if(s.length<=15)return s;s=words.slice(0,2).join(' ');if(s.length<=15)return s;return words[0].slice(0,15);
 }
+function shortGoalName(text){
+if(text.length<=15)return text;var words=text.split(' ');var s=words.slice(0,3).join(' ');if(s.length<=15)return s;s=words.slice(0,2).join(' ');if(s.length<=15)return s;return words[0].slice(0,15);
+}
 function renderMetrics(){
-var today=todayStr(),now=new Date(),days=[];
-for(var i=metricsRange-1;i>=0;i--){var dd=new Date();dd.setDate(dd.getDate()-i);days.push(dd.getFullYear()+"-"+padNum(dd.getMonth()+1)+"-"+padNum(dd.getDate()));}
+var today=todayStr(),now=new Date();
+var days=[];
+if(metricsRange===7){
+var sow=new Date(now);sow.setDate(now.getDate()-now.getDay());
+for(var wi=0;wi<7;wi++){var wd=new Date(sow);wd.setDate(sow.getDate()+wi);days.push(wd.getFullYear()+'-'+padNum(wd.getMonth()+1)+'-'+padNum(wd.getDate()));}
+}
 var snapMap={};goalHistory.forEach(function(h){snapMap[h.date]=h;});
 var todayDone=completions[today]?completions[today].length:0;
 snapMap[today]={date:today,total:goals.length,done:todayDone};
 var avgPct=0,totalDone=0,streak=0;
 if(metricsRange===7){
-var totalPossible=goals.length*days.length;
+var totalPossible=goals.length*7;
 totalDone=days.reduce(function(acc,d){return acc+(completions[d]?completions[d].length:0);},0);
 avgPct=totalPossible>0?Math.round(totalDone/totalPossible*100):0;
-for(var j=days.length-1;j>=0;j--){var dc0=completions[days[j]]?completions[days[j]].length:0;if(goals.length>0&&dc0===goals.length)streak++;else break;}
 }else{
 var monthSetS={};Object.keys(completions).forEach(function(date){if(completions[date]&&completions[date].length)monthSetS[date.slice(0,7)]=true;});
 monthSetS[now.getFullYear()+'-'+padNum(now.getMonth()+1)]=true;
@@ -435,9 +441,9 @@ if(goals.length>0&&dc1/goals.length>=0.7)above70Count++;
 }
 });
 avgPct=totalDaysCount>0?Math.round(above70Count/totalDaysCount*100):0;
-var checkD=new Date();
-while(true){var ds2=checkD.getFullYear()+'-'+padNum(checkD.getMonth()+1)+'-'+padNum(checkD.getDate());var dc2=completions[ds2]?completions[ds2].length:0;if(goals.length>0&&dc2===goals.length){streak++;checkD.setDate(checkD.getDate()-1);}else break;}
 }
+var checkD=new Date();
+while(true){var dsc=checkD.getFullYear()+'-'+padNum(checkD.getMonth()+1)+'-'+padNum(checkD.getDate());var dcc=completions[dsc]?completions[dsc].length:0;if(goals.length>0&&dcc===goals.length){streak++;checkD.setDate(checkD.getDate()-1);}else break;}
 var statsHtml='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px;">'
 +'<div style="background:white;border-radius:14px;padding:14px 8px;text-align:center;border:1.5px solid #ddeee9;"><div style="font-size:22px;font-weight:800;color:#e74c3c;line-height:1;">'+avgPct+'%</div><div style="font-size:10px;color:#aaa;font-weight:600;margin-top:4px;">'+(metricsRange===7?'% Met':'Days 70%+')+'</div></div>'
 +'<div style="background:white;border-radius:14px;padding:14px 8px;text-align:center;border:1.5px solid #ddeee9;"><div style="font-size:22px;font-weight:800;color:#27ae60;line-height:1;">'+totalDone+'</div><div style="font-size:10px;color:#aaa;font-weight:600;margin-top:4px;">Total Done</div></div>'
@@ -445,21 +451,25 @@ var statsHtml='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8p
 +'</div>';
 var gridHtml='';
 if(metricsRange===7){
-var DL=['S','M','T','W','T','F','S'];
+var WDL=['S','M','T','W','T','F','S'];
 var hdr='<div style="display:flex;align-items:center;padding-bottom:8px;border-bottom:1px solid #f0f0ea;margin-bottom:2px;">'
 +'<div style="flex:1;min-width:0;"></div>'
 +'<div style="display:flex;gap:5px;flex-shrink:0;">'
-+days.map(function(d){return '<div style="width:26px;text-align:center;font-size:11px;font-weight:700;color:#b0b8c1;">'+DL[new Date(d+'T12:00:00').getDay()]+'</div>';}).join('')
-+'</div></div>';
++days.map(function(d,i){return '<div style="width:26px;text-align:center;font-size:11px;font-weight:700;color:#b0b8c1;">'+WDL[i]+'</div>';}).join('')
++'</div>'
++'<div style="width:30px;text-align:center;font-size:14px;color:#e0e0e0;flex-shrink:0;padding-left:6px;">&#9733;</div>'
++'</div>';
 var rows=goals.map(function(g){
-var cat=CATS[g.category];
-var dots=days.map(function(d){var done=completions[d]&&completions[d].indexOf(g.id)!==-1;return '<div style="width:26px;height:26px;border-radius:8px;flex-shrink:0;background:'+(done?cat.color:'#e8e8e3')+';'+(done?'box-shadow:0 2px 5px '+cat.color+'44;':'')+'"></div>';}).join('');
+var cat=CATS[g.category];var weekDone=0;
+var dots=days.map(function(d){var done=completions[d]&&completions[d].indexOf(g.id)!==-1;if(done)weekDone++;return '<div style="width:26px;height:26px;border-radius:8px;flex-shrink:0;background:'+(done?cat.color:'#e8e8e3')+';'+(done?'box-shadow:0 2px 5px '+cat.color+'44;':'')+'"></div>';}).join('');
+var starCol=weekDone===7?'#FFD700':'#e0e0e0';
 return '<div style="display:flex;align-items:center;padding:6px 0;border-bottom:1px solid #f7f7f2;">'
 +'<div style="flex:1;min-width:0;font-size:12px;font-weight:600;color:#333;display:flex;align-items:center;gap:5px;">'
 +'<span style="flex-shrink:0;font-size:16px;">'+cat.icon+'</span>'
 +'<span style="white-space:nowrap;">'+shortGoalName(g.text)+'</span>'
 +'</div>'
 +'<div style="display:flex;gap:5px;flex-shrink:0;">'+dots+'</div>'
++'<div style="width:30px;text-align:center;font-size:18px;color:'+starCol+';flex-shrink:0;padding-left:4px;line-height:1;">&#9733;</div>'
 +'</div>';
 }).join('');
 gridHtml='<div style="background:white;border-radius:18px;padding:16px 14px;box-shadow:0 2px 8px rgba(45,122,107,0.06);border:1.5px solid #ddeee9;overflow:hidden;">'+hdr+rows+'</div>';
@@ -468,7 +478,7 @@ var monthSet={};
 Object.keys(completions).forEach(function(date){if(completions[date]&&completions[date].length)monthSet[date.slice(0,7)]=true;});
 monthSet[now.getFullYear()+'-'+padNum(now.getMonth()+1)]=true;
 var months2=Object.keys(monthSet).sort().reverse();
-var DL2=['S','M','T','W','T','F','S'];
+var CDL=['S','M','T','W','T','F','S'];
 var cals=months2.map(function(ym){
 var parts=ym.split('-'),yr2=parseInt(parts[0]),mn2=parseInt(parts[1])-1;
 var dim2=getDaysInMonth(yr2,mn2);
@@ -478,8 +488,7 @@ for(var d2=0;d2<firstDow;d2++)cells+='<div style="width:14.28%;padding-bottom:14
 for(var day=1;day<=dim2;day++){
 var ds=yr2+'-'+padNum(mn2+1)+'-'+padNum(day);
 var dc=completions[ds]?completions[ds].length:0;
-var tp=goals.length;
-var pct2=tp>0?dc/tp*100:0;
+var tp=goals.length;var pct2=tp>0?dc/tp*100:0;
 var bg='transparent',col='#bbb';
 if(dc>0){if(pct2>=100){bg='#72C27A';col='#2d6b40';}else if(pct2>=70){bg='#B5DDAA';col='#3d7a4e';}else if(pct2>=50){bg='#FFD966';col='#8a6a00';}}
 cells+='<div style="width:14.28%;padding-bottom:14.28%;position:relative;"><div style="position:absolute;inset:2px;border-radius:6px;background:'+bg+';display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:'+col+';">'+day+'</div></div>';
@@ -487,7 +496,7 @@ cells+='<div style="width:14.28%;padding-bottom:14.28%;position:relative;"><div 
 return '<div style="background:white;border-radius:18px;padding:16px;box-shadow:0 2px 8px rgba(45,122,107,0.06);border:1.5px solid #ddeee9;margin-bottom:12px;">'
 +'<div style="font-size:13px;font-weight:800;color:#1a1a1a;margin-bottom:10px;">'+MONTH_NAMES[mn2]+' '+yr2+'</div>'
 +'<div style="display:flex;margin-bottom:4px;">'
-+DL2.map(function(l){return '<div style="width:14.28%;text-align:center;font-size:10px;font-weight:700;color:#b0b8c1;">'+l+'</div>';}).join('')
++CDL.map(function(l){return '<div style="width:14.28%;text-align:center;font-size:10px;font-weight:700;color:#b0b8c1;">'+l+'</div>';}).join('')
 +'</div>'
 +'<div style="display:flex;flex-wrap:wrap;">'+cells+'</div>'
 +'</div>';
