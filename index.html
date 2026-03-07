@@ -742,7 +742,7 @@ function deleteMonthTask(id){monthlyTasks=monthlyTasks.filter(function(t){return
                         +"<span class='history-goal-name'>"+CATS[g.category].icon+" "+g.text+"</span>"
                         +"<span class='history-goal-stat'>"
                         +"<span class='history-goal-mini'><span class='history-goal-mini-fill' style='width:"+gp+"%'></span></span>"
-                        +d+"/"+dim+" ("+gp+"%)</span></div>";
+                        +gp+"%</span></div>";
                 }).join("");
                 var isCurrentMonth=(y===now.getFullYear()&&m===now.getMonth());
                 return "<div class='history-card'>"
