@@ -612,7 +612,7 @@ function deleteMonthTask(id){monthlyTasks=monthlyTasks.filter(function(t){return
             +'<textarea class="hw-textarea" id="hw-input" placeholder="Write your sentence here..."></textarea>'
             +'</div>'
             +'<div class="hw-actions">'
-            +'<button class="hw-btn-clear" onclick="document.getElementById('hw-input').value=''">Clear</button>'
+            +'<button class="hw-btn-clear" onclick="clearHwInput()">Clear</button>'
             +'<button class="hw-btn-use" onclick="useHandwriteText()">Insert Text</button>'
             +'</div>'
             +'</div>'
@@ -623,6 +623,7 @@ function deleteMonthTask(id){monthlyTasks=monthlyTasks.filter(function(t){return
           document.getElementById('hw-overlay').addEventListener('click',function(e){if(e.target.id==='hw-overlay')closeHwModal();});
         }
         function closeHwModal(){var m=document.getElementById('hw-overlay');if(m)m.remove();}
+        function clearHwInput(){var inp=document.getElementById('hw-input');if(inp)inp.value='';}
         function useHandwriteText(){
           var text=document.getElementById('hw-input').value.trim();
           var ta=document.getElementById('log-t-val');
