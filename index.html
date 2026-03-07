@@ -139,6 +139,23 @@
         .log-hist-rating{font-size:18px;line-height:1;}
         .log-hist-text{font-size:14px;color:#1e3a35;line-height:1.5;}
         .today-badge{display:inline-block;background:#e8f5f0;color:#2d7a6b;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:8px;vertical-align:middle;}
+
+        /* Handwriting modal */
+        .hw-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;display:flex;align-items:flex-end;justify-content:center;padding:16px;}
+        .hw-panel{background:white;border-radius:24px 24px 20px 20px;width:100%;max-width:480px;overflow:hidden;box-shadow:0 -4px 40px rgba(0,0,0,0.2);}
+        .hw-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid #f0f0ea;}
+        .hw-title{font-size:15px;font-weight:700;color:#1a1a1a;}
+        .hw-close{background:none;border:none;cursor:pointer;font-size:22px;color:#aaa;line-height:1;padding:0;}
+        .hw-close:hover{color:#333;}
+        .hw-body{padding:16px 20px 8px;}
+        .hw-hint{font-size:12px;color:#aaa;text-align:center;margin-bottom:12px;font-weight:500;line-height:1.5;}
+        .hw-textarea{width:100%;height:220px;border:1.5px solid #ddeee9;border-radius:14px;padding:10px 16px;font-size:21px;font-family:'Inter',sans-serif;outline:none;background-image:repeating-linear-gradient(transparent,transparent 35px,#e4f0ec 35px,#e4f0ec 36px);background-size:100% 36px;background-position:0 10px;line-height:36px;padding-top:10px;color:#1e3a35;resize:none;-webkit-user-select:text;}
+        .hw-textarea:focus{border-color:#3a9688;}
+        .hw-actions{display:flex;gap:10px;padding:14px 20px 22px;}
+        .hw-btn-clear{flex:1;padding:13px;border-radius:12px;border:1.5px solid #ddeee9;background:#f7fcfb;color:#4a7c75;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;}
+        .hw-btn-use{flex:2;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#2d7a6b,#4db6a4);color:white;font-size:14px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;}
+        .pencil-btn{background:white;border:1.5px solid #ddeee9;border-radius:10px;padding:8px 10px;cursor:pointer;font-size:18px;line-height:1;transition:all 0.2s;flex-shrink:0;align-self:flex-start;}
+        .pencil-btn:hover{background:#eef6f3;border-color:#3a9688;}
     </style>
 </head>
 <body>
@@ -318,7 +335,10 @@
             +'<div class="log-rating-row" id="log-r-row">'+rbtns+'</div>'
             +'<input type="hidden" id="log-r-val" value="'+(selR||'')+'">'
             +'<div style="font-size:12px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#7ab5ac;margin-bottom:6px;margin-top:4px;">Describe it in one sentence...</div>'
-            +'<textarea id="log-t-val" style="width:100%;border:1.5px solid #ddeee9;border-radius:10px;padding:11px 14px;font-size:14px;font-family:Inter,sans-serif;outline:none;background:#f7fcfb;color:#1e3a35;resize:none;height:72px;line-height:1.5;" placeholder="What stood out today?"></textarea>'
+            +'<div style="display:flex;gap:8px;align-items:flex-start;">'
+            +'<textarea id="log-t-val" style="flex:1;border:1.5px solid #ddeee9;border-radius:10px;padding:11px 14px;font-size:14px;font-family:Inter,sans-serif;outline:none;background:#f7fcfb;color:#1e3a35;resize:none;height:72px;line-height:1.5;" placeholder="What stood out today?"></textarea>'
+            +'<button class="pencil-btn" onclick="showHandwriteModal()" title="Write with Apple Pencil">&#9997;&#65039;</button>'
+            +'</div>'
             +'<div class="form-btns" style="margin-top:10px;">'
             +'<button class="btn-cancel" onclick="cancelLogForm()">Cancel</button>'
             +'<button class="btn-save" onclick="saveLog()">Save</button>'
@@ -577,7 +597,39 @@ saveTasksState();cancelTaskForm();renderTasks();
 function cancelTaskForm(){document.getElementById('task-add-area').innerHTML="<button class='add-btn' onclick='showTaskForm()'>&#43; Add Monthly Task</button>";}
 function toggleTask(id){var task=monthlyTasks.find(function(t){return t.id===id;});if(task)task.done=!task.done;saveTasksState();renderTasks();}
 function deleteMonthTask(id){monthlyTasks=monthlyTasks.filter(function(t){return t.id!==id;});saveTasksState();renderTasks();}
-function renderHistory(){
+
+        function showHandwriteModal(){
+          var ta=document.getElementById('log-t-val');
+          var existing=ta?ta.value:'';
+          var modal='<div class="hw-overlay" id="hw-overlay">'
+            +'<div class="hw-panel">'
+            +'<div class="hw-header">'
+            +'<span class="hw-title">&#9997;&#65039; Write your sentence</span>'
+            +'<button class="hw-close" onclick="closeHwModal()">&#215;</button>'
+            +'</div>'
+            +'<div class="hw-body">'
+            +'<div class="hw-hint">Use your Apple Pencil &mdash; Scribble automatically converts<br>your handwriting to text as you write</div>'
+            +'<textarea class="hw-textarea" id="hw-input" placeholder="Write your sentence here..."></textarea>'
+            +'</div>'
+            +'<div class="hw-actions">'
+            +'<button class="hw-btn-clear" onclick="document.getElementById('hw-input').value=''">Clear</button>'
+            +'<button class="hw-btn-use" onclick="useHandwriteText()">Insert Text</button>'
+            +'</div>'
+            +'</div>'
+            +'</div>';
+          document.body.insertAdjacentHTML('beforeend',modal);
+          var inp=document.getElementById('hw-input');
+          if(inp){inp.value=existing;setTimeout(function(){inp.focus();},80);}
+          document.getElementById('hw-overlay').addEventListener('click',function(e){if(e.target.id==='hw-overlay')closeHwModal();});
+        }
+        function closeHwModal(){var m=document.getElementById('hw-overlay');if(m)m.remove();}
+        function useHandwriteText(){
+          var text=document.getElementById('hw-input').value.trim();
+          var ta=document.getElementById('log-t-val');
+          if(ta&&text){ta.value=text;ta.style.borderColor='';}
+          closeHwModal();
+        }
+        function renderHistory(){
             var list=document.getElementById("history-list");
             var monthSet={};
             Object.keys(completions).forEach(function(date){monthSet[date.slice(0,7)]=true;});
