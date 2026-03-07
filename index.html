@@ -142,16 +142,16 @@
 
         /* Handwriting modal */
         .hw-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;display:flex;align-items:flex-end;justify-content:center;padding:16px;}
-        .hw-panel{background:white;border-radius:24px 24px 20px 20px;width:100%;max-width:480px;overflow:hidden;box-shadow:0 -4px 40px rgba(0,0,0,0.2);}
-        .hw-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid #f0f0ea;}
+        .hw-panel{background:white;border-radius:24px 24px 20px 20px;width:100%;max-width:480px;box-shadow:0 -4px 40px rgba(0,0,0,0.2);}
+        .hw-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid #f0f0ea;border-radius:24px 24px 0 0;background:white;}
         .hw-title{font-size:15px;font-weight:700;color:#1a1a1a;}
         .hw-close{background:none;border:none;cursor:pointer;font-size:22px;color:#aaa;line-height:1;padding:0;}
         .hw-close:hover{color:#333;}
         .hw-body{padding:16px 20px 8px;}
         .hw-hint{font-size:12px;color:#aaa;text-align:center;margin-bottom:12px;font-weight:500;line-height:1.5;}
-        .hw-textarea{width:100%;height:220px;border:1.5px solid #ddeee9;border-radius:14px;padding:10px 16px;font-size:21px;font-family:'Inter',sans-serif;outline:none;background-image:repeating-linear-gradient(transparent,transparent 35px,#e4f0ec 35px,#e4f0ec 36px);background-size:100% 36px;background-position:0 10px;line-height:36px;padding-top:10px;color:#1e3a35;resize:none;-webkit-user-select:text;}
+        .hw-textarea{width:100%;height:260px;border:1.5px solid #ddeee9;border-radius:14px;padding:10px 16px;font-size:21px;font-family:'Inter',sans-serif;outline:none;background-image:repeating-linear-gradient(transparent,transparent 35px,#e4f0ec 35px,#e4f0ec 36px);background-size:100% 36px;background-position:0 10px;line-height:36px;padding-top:10px;color:#1e3a35;resize:none;-webkit-user-select:text;touch-action:auto;}
         .hw-textarea:focus{border-color:#3a9688;}
-        .hw-actions{display:flex;gap:10px;padding:14px 20px 22px;}
+        .hw-actions{display:flex;gap:10px;padding:14px 20px 22px;border-radius:0 0 20px 20px;background:white;}
         .hw-btn-clear{flex:1;padding:13px;border-radius:12px;border:1.5px solid #ddeee9;background:#f7fcfb;color:#4a7c75;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;}
         .hw-btn-use{flex:2;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#2d7a6b,#4db6a4);color:white;font-size:14px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;}
         .pencil-btn{background:white;border:1.5px solid #ddeee9;border-radius:10px;padding:8px 10px;cursor:pointer;font-size:18px;line-height:1;transition:all 0.2s;flex-shrink:0;align-self:flex-start;}
@@ -608,8 +608,8 @@ function deleteMonthTask(id){monthlyTasks=monthlyTasks.filter(function(t){return
             +'<button class="hw-close" onclick="closeHwModal()">&#215;</button>'
             +'</div>'
             +'<div class="hw-body">'
-            +'<div class="hw-hint">Use your Apple Pencil &mdash; Scribble automatically converts<br>your handwriting to text as you write</div>'
-            +'<textarea class="hw-textarea" id="hw-input" placeholder="Write your sentence here..."></textarea>'
+            +'<div class="hw-hint">Write with Apple Pencil &mdash; Scribble converts handwriting to text.<br><span style="color:#3a9688;font-weight:600;">Tip:</span> Enable in <b>Settings › Apple Pencil › Scribble</b></div>'
+            +'<textarea class="hw-textarea" id="hw-input" inputmode="text" autocorrect="on" autocapitalize="sentences" placeholder="Write here with Apple Pencil..."></textarea>'
             +'</div>'
             +'<div class="hw-actions">'
             +'<button class="hw-btn-clear" onclick="clearHwInput()">Clear</button>'
