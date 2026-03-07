@@ -36,7 +36,7 @@
 
         /* Goal bar cards */
         .goal-bar-card{position:relative;border-radius:20px;background:#e0dfd9;overflow:hidden;margin-bottom:13px;cursor:pointer;height:86px;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 8px rgba(0,0,0,0.07);}
-        .goal-bar-card:active{transform:scale(0.97);}
+        .goal-bar-card:active{}
         .goal-bar-fill{position:absolute;left:0;top:0;bottom:0;border-radius:20px;transition:width 0.7s cubic-bezier(0.4,0,0.2,1);}
         .goal-bar-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 18px 0 16px;}
         .goal-bar-left{display:flex;align-items:center;gap:11px;}
@@ -49,8 +49,12 @@
         .goal-bar-done-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#1a1a1a;opacity:0.5;margin-right:4px;vertical-align:middle;}
 
         /* Del button */
-        .goal-del-btn{position:absolute;top:7px;right:10px;background:rgba(0,0,0,0.12);border:none;cursor:pointer;font-size:13px;color:rgba(0,0,0,0.5);z-index:2;line-height:1;padding:3px 6px;border-radius:6px;transition:all 0.2s;}
-        .goal-del-btn:hover{background:rgba(220,80,80,0.2);color:#c0392b;}
+        .goal-del-btn{display:none;}
+        .goal-del-bg{position:absolute;right:0;top:0;bottom:0;width:90px;background:linear-gradient(135deg,#e74c3c,#c0392b);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;border-radius:0 20px 20px 0;}
+        .goal-del-bg-icon{font-size:22px;line-height:1;}
+        .goal-del-bg-lbl{font-size:11px;color:white;font-weight:700;letter-spacing:0.3px;}
+        .goal-slide-wrap{position:absolute;inset:0;border-radius:20px;background:#e0dfd9;transform:translateX(0);transition:transform 0.25s cubic-bezier(0.4,0,0.2,1);will-change:transform;overflow:hidden;}
+        .goal-bar-card.sw-active .goal-slide-wrap{transition:none;}
 
         /* Add form */
         .add-btn{width:100%;padding:15px;border-radius:18px;border:2px dashed #b8d8d0;background:rgba(255,255,255,0.5);cursor:pointer;font-size:14px;color:#3a9688;font-weight:600;font-family:'Inter',sans-serif;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
@@ -516,7 +520,9 @@
                 var cat=CATS[g.category];
                 var done=getMonthlyCount(g.id,now.getFullYear(),now.getMonth());
                 var pct=Math.round(done/dim*100);
-                return "<div class='goal-bar-card' data-id='"+g.id+"' onclick='toggle("+g.id+")'>"
+                return "<div class='goal-bar-card' data-id='"+g.id+"'>"
+                    +"<div class='goal-del-bg'><div class='goal-del-bg-icon'>&#128465;</div><div class='goal-del-bg-lbl'>Delete</div></div>"
+                    +"<div class='goal-slide-wrap' onclick='toggle("+g.id+")'>"
                     +"<div class='goal-bar-fill' style='width:"+(done>0?Math.max(pct,4)+"%;background:"+cat.color:"0%")+"'></div>"
                     +"<div class='goal-bar-inner'>"
                     +"<div class='goal-bar-left'>"
@@ -528,12 +534,51 @@
                     +"<div class='goal-bar-count'>"+done+" / "+dim+"</div>"
                     +"<div class='goal-bar-togo'>"+(dim-done)+" to go</div>"
                     +"</div></div>"
-                    +"<button class='goal-del-btn' onclick='event.stopPropagation();removeGoal("+g.id+")'>&times;</button>"
+                    +"</div>"
                     +"</div>";
             }).join("");
+            attachSwipeDelete();
         }
 
         function removeGoal(id){goals=goals.filter(function(g){return g.id!==id;});saveState();renderGoals();}
+
+        function attachSwipeDelete(){
+          document.querySelectorAll('.goal-bar-card').forEach(function(card){
+            var wrap=card.querySelector('.goal-slide-wrap');
+            if(!wrap||card._swipe)return;
+            card._swipe=true;
+            var startX,startY,dx=0,isHoriz=null,active=false;
+            var THRESH=80;
+            card.addEventListener('touchstart',function(e){
+              startX=e.touches[0].clientX;startY=e.touches[0].clientY;
+              dx=0;isHoriz=null;active=false;
+              wrap.style.transition='none';
+            },{passive:true});
+            card.addEventListener('touchmove',function(e){
+              dx=e.touches[0].clientX-startX;
+              var dy=e.touches[0].clientY-startY;
+              if(isHoriz===null){isHoriz=Math.abs(dx)>Math.abs(dy);}
+              if(!isHoriz)return;
+              e.preventDefault();
+              active=true;
+              card.classList.add('sw-active');
+              var tx=Math.min(0,Math.max(dx,-110));
+              wrap.style.transform='translateX('+tx+'px)';
+            },{passive:false});
+            card.addEventListener('touchend',function(){
+              card.classList.remove('sw-active');
+              if(!active)return;
+              wrap.style.transition='transform 0.25s cubic-bezier(0.4,0,0.2,1)';
+              if(dx<-THRESH){
+                wrap.style.transform='translateX(-110%)';
+                setTimeout(function(){removeGoal(parseInt(card.dataset.id));},220);
+              }else{
+                wrap.style.transform='translateX(0)';
+              }
+              active=false;
+            },{passive:true});
+          });
+        }
 
         function showForm(){
             document.getElementById("add-area").innerHTML=
