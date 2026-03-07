@@ -331,7 +331,7 @@
         function showForm(){
             document.getElementById("add-area").innerHTML=
                 "<div class='add-form'>"
-                +"<input id='new-text' placeholder='What is your goal?' onkeydown="if(event.key==='Enter')saveGoal()" autofocus/>"
+                +"<input id='new-text' placeholder='What is your goal?' onkeydown='if(event.key==\"Enter\")saveGoal()' autofocus/>"
                 +"<select id='new-cat'>"+Object.keys(CATS).map(function(c){return "<option>"+c+"</option>";}).join("")+"</select>"
                 +"<div class='form-btns'>"
                 +"<button class='btn-cancel' onclick='cancelForm()'>Cancel</button>"
@@ -377,7 +377,7 @@
                 }).join("");
                 var isCurrentMonth=(y===now.getFullYear()&&m===now.getMonth());
                 return "<div class='history-card'>"
-                    +"<div class='history-card-header' onclick='toggleHistMonth("hm-"+ym+"")'>"
+                    +"<div class='history-card-header' onclick='toggleHistMonth(\"hm-"+ym+"\")'>"
                     +"<span class='history-card-name'>"+MONTH_NAMES[m]+" "+y+"</span>"
                     +"<div class='history-bar-wrap'><div class='history-bar-fill' style='width:"+pct+"%'></div></div>"
                     +"<span class='history-pct'>"+pct+"%</span>"
@@ -496,7 +496,7 @@
                 return "<div class='journal-entry'>"
                     +"<div class='journal-entry-date'>"+label
                     +(isToday?"<span class='today-badge'>TODAY</span>":"")
-                    +"<button class='journal-entry-del' onclick="deleteJournal('"+e.date+"')">&times;</button></div>"
+                    +"<button class='journal-entry-del' onclick='deleteJournal(\""+e.date+"\")'>&times;</button></div>"
                     +"<p class='journal-entry-text'>"+e.text+"</p></div>";
             }).join("");
         }
