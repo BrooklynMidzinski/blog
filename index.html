@@ -103,6 +103,9 @@
         .streak-num{font-size:42px;font-weight:700;color:#2d7a6b;text-align:center;line-height:1;}
         .streak-lbl{text-align:center;font-size:13px;color:#7ab5ac;margin-top:4px;}
 
+        /* Tasks */
+        .task-item{background:white;border-radius:16px;border:1.5px solid #e8e8e3;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 6px rgba(0,0,0,0.05);transition:transform 0.12s;}.task-item.done-task{opacity:0.45;}.task-check{width:22px;height:22px;border-radius:6px;border:2px solid #b8d8d0;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:white;transition:all 0.2s;background:white;}.task-check.checked{background:#2d7a6b;border-color:#2d7a6b;}.task-label{flex:1;font-size:15px;font-weight:500;color:#1a1a1a;cursor:pointer;line-height:1.4;}.task-label.done-text{text-decoration:line-through;color:#aaa;}.task-del{background:none;border:none;cursor:pointer;font-size:18px;color:#ddd;padding:2px 6px;flex-shrink:0;line-height:1;transition:color 0.2s;}.task-del:hover{color:#e57373;}
+
         /* Journal */
         .journal-add-btn{width:100%;padding:15px;border-radius:16px;border:2px dashed #a8d5cb;background:rgba(255,255,255,0.6);cursor:pointer;font-size:14px;color:#3a9688;font-weight:600;font-family:'Inter',sans-serif;transition:all 0.2s;margin-bottom:16px;}
         .journal-add-btn:hover{background:white;border-color:#2d7a6b;}
@@ -126,7 +129,7 @@
     <div class="nav-bar">
         <div class="nav-tabs" id="nav-tabs">
             <button class="nav-tab active" data-page="goals"><span class="tab-icon">&#10022;</span><span class="tab-label">Goals</span></button>
-            <button class="nav-tab" data-page="metrics"><span class="tab-icon">&#128202;</span><span class="tab-label">Metrics</span></button>
+            <button class="nav-tab" data-page="tasks"><span class="tab-icon">&#9745;</span><span class="tab-label">Tasks</span></button><button class="nav-tab" data-page="metrics"><span class="tab-icon">&#128202;</span><span class="tab-label">Metrics</span></button>
             <button class="nav-tab" data-page="journal"><span class="tab-icon">&#128218;</span><span class="tab-label">Journal</span></button>
         </div>
     </div>
@@ -148,6 +151,14 @@
                 <div id="history-list"></div>
             </div>
         </div>
+        <div class="page" id="page-tasks">
+            <div class="month-header">
+                <span class="month-name" id="tasks-month-label"></span>
+                <span class="days-left" id="tasks-count-label"></span>
+            </div>
+            <div id="task-add-area"><button class="add-btn" onclick="showTaskForm()">&#43; Add Monthly Task</button></div>
+            <div id="tasks-list"></div>
+        </div>
         <div class="page" id="page-metrics">
             <div class="subtabs" style="margin-bottom:16px"><button class="subtab active" onclick="setRange(7,this)">Weekly</button><button class="subtab" onclick="setRange(30,this)">Monthly</button></div>
             <div id="metrics-content"></div>
@@ -167,6 +178,7 @@
             document.getElementById("page-"+page).classList.add("active");
             btn.classList.add("active");
             if(page==="metrics")renderMetrics();
+            if(page==="tasks")renderTasks();
             if(page==="journal")renderJournal();
         });
 
@@ -209,6 +221,7 @@
         var goalHistory=JSON.parse(localStorage.getItem("history_v1")||"[]");
         var journal=JSON.parse(localStorage.getItem("journal_v1")||"[]");
         var metricsRange=7;
+        var monthlyTasks=JSON.parse(localStorage.getItem("tasks_v1")||"[]");
 
         // Date helpers
         function todayStr(){var d=new Date();return d.getFullYear()+"-"+padNum(d.getMonth()+1)+"-"+padNum(d.getDate());}
@@ -345,7 +358,47 @@
             document.getElementById("add-area").innerHTML="<button class='add-btn' onclick='showForm()'>&#43; Add New Goal</button>";
         }
 
-        function renderHistory(){
+        function renderTasks(){
+var now=new Date();
+var el=document.getElementById('tasks-month-label');
+if(el)el.textContent=MONTH_NAMES[now.getMonth()]+' '+now.getFullYear();
+var pending=monthlyTasks.filter(function(t){return !t.done;}).length;
+var total=monthlyTasks.length;
+var cl=document.getElementById('tasks-count-label');
+if(cl)cl.textContent=total===0?'':pending===0?'all done ✓':(pending+' remaining');
+var list=document.getElementById('tasks-list');if(!list)return;
+if(!total){list.innerHTML="<div class='empty'>No tasks yet &#10024;<br><span style='font-size:13px;opacity:0.7'>Add your monthly to-dos above</span></div>";return;}
+var sorted=monthlyTasks.slice().sort(function(a,b){return (a.done?1:0)-(b.done?1:0);});
+list.innerHTML=sorted.map(function(t){
+return "<div class='task-item"+(t.done?' done-task':'')+"'>"
++"<div class='task-check"+(t.done?' checked':'')+"' onclick='toggleTask("+t.id+")'>"+(t.done?'&#10003;':'')+"</div>"
++"<span class='task-label"+(t.done?' done-text':'')+"' onclick='toggleTask("+t.id+")'>"+t.text+"</span>"
++"<button class='task-del' onclick='deleteMonthTask("+t.id+")'>&#215;</button>"
++"</div>";
+}).join('');
+}
+function saveTasksState(){localStorage.setItem('tasks_v1',JSON.stringify(monthlyTasks));}
+function showTaskForm(){
+document.getElementById('task-add-area').innerHTML=
+"<div class='add-form'>"
++"<input id='task-input' placeholder='What needs to get done this month?'/>"
++"<div class='form-btns'>"
++"<button class='btn-cancel' onclick='cancelTaskForm()'>Cancel</button>"
++"<button class='btn-save' onclick='saveTask()'>Add Task</button>"
++"</div></div>";
+var inp=document.getElementById('task-input');
+inp.focus();
+inp.onkeydown=function(e){if(e.key==='Enter')saveTask();};
+}
+function saveTask(){
+var t=document.getElementById('task-input').value.trim();if(!t)return;
+monthlyTasks.push({id:Date.now(),text:t,done:false});
+saveTasksState();cancelTaskForm();renderTasks();
+}
+function cancelTaskForm(){document.getElementById('task-add-area').innerHTML="<button class='add-btn' onclick='showTaskForm()'>&#43; Add Monthly Task</button>";}
+function toggleTask(id){var task=monthlyTasks.find(function(t){return t.id===id;});if(task)task.done=!task.done;saveTasksState();renderTasks();}
+function deleteMonthTask(id){monthlyTasks=monthlyTasks.filter(function(t){return t.id!==id;});saveTasksState();renderTasks();}
+function renderHistory(){
             var list=document.getElementById("history-list");
             var monthSet={};
             Object.keys(completions).forEach(function(date){monthSet[date.slice(0,7)]=true;});
